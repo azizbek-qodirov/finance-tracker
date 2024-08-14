@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+package finance;
+
+import "finance-protos/void.proto";
+
+service CategoryService {
+    rpc Create(CategoryCReq) returns (Void);
+    rpc GetByID(ByID) returns (CategoryGRes);
+    rpc Update(CategoryUpdate) returns (Void);
+    rpc Delete(ByID) returns (Void);
+    rpc GetAll(CategoryGAReq) returns (CategoryGARes);
+}
+
+message CategoryCReq {
+    string user_id = 1;
+    string name = 2;
+    string type = 3;
+}
+
+message CategoryUpdate {
+    string id = 1;
+    string name = 2;
+}
+
+message CategoryGRes {
+    string id = 1;
+    string user_id = 2;
+    string name = 3;
+    string type = 4;
+}
+
+message CategoryGAReq  {
+    string user_id = 1;
+    Pagination pagination = 2;
+}   
+
+message CategoryGARes {
+    repeated CategoryGRes categories = 1;
+}

@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+package finance;
+
+import "finance-protos/void.proto";
+
+service GoalService {
+    rpc Create(GoalCReq) returns (Void);
+    rpc GetByID(ByID) returns (GoalGRes);
+    rpc Update(GoalUReq) returns (Void);
+    rpc UpdateCurrentAmount(GoalCurrentAmountUReq) returns (Void);
+    rpc Delete(ByID) returns (Void);
+    rpc GetAll(GoalGAReq) returns (GoalGARes);
+}
+
+
+message GoalCReq {
+    string user_id = 1;
+    string name = 2;
+    float target_amount = 3;
+    float current_amount = 4;
+    string deadline = 5;
+    string status = 6;
+}
+
+message GoalUReq {
+    string id = 1;
+    string name = 2;
+    float target_amount = 3;
+    string deadline = 4;
+    string status = 5;
+}
+
+message GoalCurrentAmountUReq {
+    string id = 1;
+    string current_amount = 2;
+}
+
+message GoalGRes {
+    string id = 1;
+    string user_id = 2;
+    string name = 3;
+    float target_amount = 4;
+    float current_amount = 5;
+    string deadline = 6;
+    string status = 7;
+}
+
+message GoalGAReq {
+    string user_id = 1;
+    string status = 2;
+    float target_from = 4;
+    float target_to = 5;
+    string deadline_from = 6;
+    string deadline_to = 7;
+    Pagination pagination = 8;
+}
+
+message GoalGARes {
+    repeated GoalGRes goals = 1;
+}

@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+package finance;
+
+import "finance-protos/void.proto";
+
+service TransactionService {
+    rpc Create(TransactionCReq) returns (Void);
+    rpc GetByID(ByID) returns (TransactionGRes);
+    rpc GetAll(TransactionGAReq) returns (TransactionGARes);
+}
+
+message TransactionCReq {
+    string user_id = 1;
+    string account_id = 2;
+    string category_id = 3;
+    float amount = 4;
+    string type = 5;
+    string description = 6;
+    string created_datetime = 7;
+}
+
+message TransactionGRes {
+    string user_id = 1;
+    string account_id = 2;
+    string category_id = 3;
+    float amount = 4;
+    string type = 5;
+    string description = 6;
+    string created_datetime = 7;
+}
+
+message TransactionGAReq {
+    string user_id = 1;
+    string account_id = 2;
+    string category_id = 3;
+    float  amount = 4;
+    string type = 5;
+    string date_from = 6;
+    string date_to = 7;
+    Pagination pagination = 8;
+}
+
+message TransactionGARes {
+    repeated TransactionGRes transactions = 1;
+}

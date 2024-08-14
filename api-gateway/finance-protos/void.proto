@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package finance;
+
+option go_package = "genprotos/";
+
+message Void {};
+
+message ByID{
+  string id = 1;
+}
+
+message ByUserID {
+  string user_id = 1;
+}
+
+message Pagination {
+  int64 limit = 1;
+  int64 offset = 2;
+}

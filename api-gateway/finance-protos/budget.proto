@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+package finance;
+
+import "finance-protos/void.proto";
+
+service BudgetService {
+    rpc Create(BudgetCReq) returns (Void);
+    rpc GetByID(ByID) returns (BudgetGRes);
+    rpc Update(BudgetUReq) returns (Void);
+    rpc Delete(ByID) returns (Void);
+    rpc GetAll(BudgetGAreq) returns (BudgetGARes);    
+}
+
+message BudgetCReq {
+    string user_id = 1;
+    string category_id = 2;
+    float amount = 3;
+    string period = 4;
+    string start_date = 5;
+    string end_date = 6;
+}
+
+message BudgetUReq {
+    string id = 1;
+    float amount = 2;
+    string period = 3;
+    string start_date = 4;
+    string end_date = 5;
+}
+
+message BudgetGRes {
+    string id = 1;
+    string user_id = 2;
+    string category_id = 3;
+    float amount = 4;
+    string period = 5;
+    string start_date = 6;
+    string end_date = 7;
+}
+
+message BudgetGAreq {
+    string user_id = 1;
+    string category_id = 2;
+    float amount_from = 3;
+    float amount_to = 4;
+    string period = 5;
+    Pagination pagination = 6;
+}
+
+message BudgetGARes {
+    repeated BudgetGRes budgets = 1;
+}

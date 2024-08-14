@@ -25,6 +25,5 @@ func main() {
 	if err := roter.Run(cf.AUTH_PORT); err != nil {
 		panic(err)
 	}
-	
-}
 
+}

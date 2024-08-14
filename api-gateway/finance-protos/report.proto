@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+package finance;
+
+import "finance-protos/transaction.proto";
+import "finance-protos/void.proto";
+
+service ReportService {
+    rpc GetSpendings(SpendingGReq) returns (SpendingGRes);
+    rpc GetIncomes(IncomeGReq) returns (IncomeGRes);
+    rpc BudgetPerformance(BudgetPerReq) returns (BudgetPerGet);
+    rpc GoalProgress(GoalProgresReq) returns (GoalProgresGet);
+}
+message SpendingGReq {
+    string user_id = 1;
+    string date_from = 2;
+    string date_to = 3;
+    string category_id = 4;
+    Pagination pagination = 5;
+}
+
+message SpendingGRes {
+    SpendingGReq request = 1;
+    float total_amount = 2;
+    repeated TransactionGARes transactions = 3;
+}
+
+message IncomeGReq {
+    string user_id = 1;
+    string date_from = 2;
+    string date_to = 3;
+    string category_id = 4;
+    Pagination pagination = 5;
+}
+
+message IncomeGRes {
+    IncomeGReq request = 1;
+    float total_amount = 2;
+    repeated TransactionGARes transactions = 4;
+}
+message BudgetPerReq {
+    string user_id = 1;
+    string category_id = 2;
+    string period = 3;     
+    string start_date = 4; 
+    string end_date = 5;   
+}
+
+message PeriodBudgetPer {
+    string start_date = 1;
+    string end_date = 2;
+    float  total_spendings = 3;
+    float  target_amount = 4;
+    float  progress = 5;
+    string period = 6;
+    string category_id = 7;
+}
+
+message BudgetPerGet {
+    repeated PeriodBudgetPer performances = 1; 
+}
+
+message GoalProgresReq {
+    string user_id = 1;
+    string status = 2;
+    string deadline_from = 3; 
+    string deadline_to = 4; 
+}
+
+message GoalProgress {
+    string deadline = 1;
+    float  target_amount = 2;
+    float  current_amount = 3;
+    float  progress = 4;
+    string  goal_name  = 5;
+}
+
+message GoalProgresGet {
+    repeated GoalProgress goals = 1;
+}
+

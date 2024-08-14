@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+package finance;
+
+import "finance-protos/void.proto";
+
+service AccountService {
+    rpc GetAccount(ByUserID) returns (AccountGRes);
+    rpc GetBalance(ByUserID) returns (AccountBalanceGRes);
+    rpc UpdateAccount(AccountUReq) returns (Void);
+    rpc UpdateBalance(AccountBalanceUReq) returns (Void);
+}
+
+
+message AccountGRes {
+    string id = 1;
+    string user_id = 2;
+    string name = 3;
+    string type = 4;
+}
+
+message AccountBalanceGRes {
+    string currency = 5;
+    float balance = 6;
+}
+
+message AccountBalanceUReq {
+    string user_id = 1;
+    string balance = 2;
+}
+
+message AccountUReq {
+    string id = 1;
+    string name = 2;
+}
