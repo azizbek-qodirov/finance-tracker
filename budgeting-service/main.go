@@ -14,7 +14,7 @@ func main() {
 	config := cf.Load()
 	em := cf.NewErrorManager()
 
-	db, err := storage.NewPostgresStorage(config)
+	db, err := storage.NewDatabaseStorage(config)
 	em.CheckErr(err)
 	defer db.Close()
 

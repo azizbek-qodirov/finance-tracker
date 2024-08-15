@@ -1,4 +1,4 @@
-FROM golang:1.22.5 AS builder
+FROM golang:1.22.4 AS builder
 WORKDIR /app
 COPY go.mod ./
 COPY go.sum ./
@@ -10,9 +10,8 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/myapp .
 
-# COPY --from=builder /app/api/model.conf ./api/
-# COPY --from=builder /app/api/policy.csv ./api/
 
 COPY .env .
+
 EXPOSE 8080
 CMD ["./myapp"]

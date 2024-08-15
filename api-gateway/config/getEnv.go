@@ -24,7 +24,7 @@ func Load() Config {
 
 	config.HTTP_PORT = cast.ToString(coalesce("HTTP_PORT", ":8080"))
 	config.BUDGET_SERVICE_PORT = cast.ToString(coalesce("BUDGET_SERVICE_PORT", ":50051"))
-	config.KAFKA_BROKER = cast.ToString(coalesce("KAFKA_BROKER", "localhost:9092"))
+	config.KAFKA_BROKER = cast.ToString(coalesce("KAFKA_BROKER", "kafka:9092"))
 
 	return config
 }

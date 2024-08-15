@@ -27,9 +27,12 @@ type Storage struct {
 	TransactionS TransactionI
 }
 
-func NewPostgresStorage(config config.Config) (*Storage, error) {
+func NewDatabaseStorage(config config.Config) (*Storage, error) {
 	// #################     MONGODB CONNECTION     ###################### //
-	clientOptions := options.Client().ApplyURI(config.MONGO_URI)
+	clientOptions := options.Client().ApplyURI(config.MONGO_URI).SetAuth(options.Credential{
+		Username: "root",
+		Password: "root",
+	})
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		return nil, err

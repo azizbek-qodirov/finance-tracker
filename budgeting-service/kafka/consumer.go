@@ -3,7 +3,6 @@ package kfk
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"sync"
 
@@ -51,7 +50,6 @@ func (kcm *KafkaConsumerManager) consumeMessages(topic string) {
 	handler := kcm.handlers[topic]
 
 	for {
-		fmt.Printf("Listening for a message in topic %s...\n", topic)
 		msg, err := reader.ReadMessage(context.Background())
 		if err != nil {
 			log.Printf("Error reading message from topic %s: %v", topic, err)

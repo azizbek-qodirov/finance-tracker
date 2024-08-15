@@ -22,7 +22,10 @@ func ConnectDB(cf *config.Config) (*sql.DB, *mongo.Client, error) {
 		panic("Postgres not connected due to error: " + err.Error())
 	}
 
-	clientOptions := options.Client().ApplyURI(cf.MONGO_URI)
+	clientOptions := options.Client().ApplyURI(cf.MONGO_URI).SetAuth(options.Credential{
+		Username: "root",
+		Password: "root",
+	})
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		return nil, nil, err

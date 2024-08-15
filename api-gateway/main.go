@@ -13,7 +13,7 @@ func main() {
 	config := cf.Load()
 	em := cf.NewErrorManager()
 
-	BudgetConn, err := grpc.NewClient(fmt.Sprintf("localhost%s", config.BUDGET_SERVICE_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	BudgetConn, err := grpc.NewClient(fmt.Sprintf("budget_cont%s", config.BUDGET_SERVICE_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	em.CheckErr(err)
 	defer BudgetConn.Close()
 
