@@ -1,17 +1,27 @@
 package handlers
 
 import (
-	pb "gateway-service/genprotos"
+	pb "gateway-service/genprotos" // Update with your actual package path
 
 	"google.golang.org/grpc"
 )
 
 type HTTPHandler struct {
-	Lesson pb.LessonServiceClient
+	Account     pb.AccountServiceClient
+	Budget      pb.BudgetServiceClient
+	Category    pb.CategoryServiceClient
+	Goal        pb.GoalServiceClient
+	Report      pb.ReportServiceClient
+	Transaction pb.TransactionServiceClient
 }
 
-func NewHandler(connL *grpc.ClientConn) *HTTPHandler {
+func NewHandler(conn *grpc.ClientConn) *HTTPHandler {
 	return &HTTPHandler{
-		Lesson: pb.NewLessonServiceClient(connL),
+		Account:     pb.NewAccountServiceClient(conn),
+		Budget:      pb.NewBudgetServiceClient(conn),
+		Category:    pb.NewCategoryServiceClient(conn),
+		Goal:        pb.NewGoalServiceClient(conn),
+		Report:      pb.NewReportServiceClient(conn),
+		Transaction: pb.NewTransactionServiceClient(conn),
 	}
 }

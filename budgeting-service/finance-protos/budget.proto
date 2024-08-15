@@ -23,7 +23,23 @@ message BudgetCReq {
     string end_date = 6;
 }
 
+message BudgetCReqForSwagger {
+    string category_id = 2;
+    float amount = 3;
+    string period = 4;
+    string start_date = 5;
+    string end_date = 6;
+}
+
 message BudgetUReq {
+    string id = 1;
+    float amount = 2;
+    string period = 3;
+    string start_date = 4;
+    string end_date = 5;
+}
+
+message BudgetUReqForSwagger {
     string id = 1;
     float amount = 2;
     string period = 3;

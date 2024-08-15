@@ -1,14 +1,1 @@
-// -> mongo
-// -> -> exercise
-// -> -> user_data
-
-// -> postgres
-// -> -> lesson
-// -> -> user-lesson
-// -> -> vocabulary
-
-// -> redis
-// -> -> if exists leadboard from redis else from postgresql
-
-// -> kafka/rabbitmq
-// -> -> in updating user_data: XP, Streak, Games played count, (Achievements, Goals)
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFvZGlyb3Zheml6YmVrMjQ5QGdtYWlsLmNvbSIsImV4cCI6MTcyMzc1OTQ0MSwiaWF0IjoxNzIzNjczMDQxLCJyb2xlIjoidXNlciIsInVzZXJfaWQiOiI0Y2UwOGRlMC05ZmFmLTQxNzEtODQzYS0zYzM2NjcxYmE2ODMifQ.dzrGteL_joO_ICJr7yyaYEvSzsBDyGvwWFiEzFvQOmI

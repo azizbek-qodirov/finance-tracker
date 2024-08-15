@@ -23,11 +23,6 @@ func NewTransactionManager(client *mongo.Client, dbName, collectionName string) 
 }
 
 func (m *TransactionManager) Create(req *pb.TransactionCReq) (*pb.Void, error) {
-	createdDatetime, err := time.Parse(time.RFC3339, req.CreatedDatetime) // Adjust date format if needed
-	if err != nil {
-		return nil, fmt.Errorf("invalid created_datetime format: %v", err)
-	}
-
 	newTransaction := bson.M{
 		"user_id":          req.UserId,
 		"account_id":       req.AccountId,
@@ -35,7 +30,7 @@ func (m *TransactionManager) Create(req *pb.TransactionCReq) (*pb.Void, error) {
 		"amount":           req.Amount,
 		"type":             req.Type,
 		"description":      req.Description,
-		"created_datetime": createdDatetime,
+		"created_datetime": time.Now().Format(time.RFC3339),
 	}
 
 	result, err := m.Collection.InsertOne(context.Background(), newTransaction)
@@ -53,8 +48,18 @@ func (m *TransactionManager) GetByID(req *pb.ByID) (*pb.TransactionGRes, error) 
 		return nil, fmt.Errorf("invalid transaction ID: %v", err)
 	}
 
-	var transaction pb.TransactionGRes
-	err = m.Collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&transaction)
+	var transactionData struct {
+		ID              primitive.ObjectID `bson:"_id"`
+		UserID          string             `bson:"user_id"`
+		AccountID       string             `bson:"account_id"`
+		CategoryID      string             `bson:"category_id"`
+		Amount          float32            `bson:"amount"`
+		Type            string             `bson:"type"`
+		Description     string             `bson:"description"`
+		CreatedDatetime time.Time          `bson:"created_datetime"`
+	}
+
+	err = m.Collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&transactionData)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, fmt.Errorf("transaction not found")
@@ -62,7 +67,32 @@ func (m *TransactionManager) GetByID(req *pb.ByID) (*pb.TransactionGRes, error) 
 		return nil, fmt.Errorf("failed to get transaction: %v", err)
 	}
 
-	return &transaction, nil
+	transaction := &pb.TransactionGRes{
+		Id:              transactionData.ID.Hex(),
+		UserId:          transactionData.UserID,
+		AccountId:       transactionData.AccountID,
+		CategoryId:      transactionData.CategoryID,
+		Amount:          transactionData.Amount,
+		Type:            transactionData.Type,
+		Description:     transactionData.Description,
+		CreatedDatetime: transactionData.CreatedDatetime.Format(time.RFC3339),
+	}
+
+	return transaction, nil
+}
+
+func (m *TransactionManager) Delete(req *pb.ByID) (*pb.Void, error) {
+	objID, err := primitive.ObjectIDFromHex(req.Id)
+	if err != nil {
+		return nil, fmt.Errorf("invalid transaction ID: %v", err)
+	}
+
+	_, err = m.Collection.DeleteOne(context.Background(), bson.M{"_id": objID})
+	if err != nil {
+		return nil, fmt.Errorf("failed to delete transaction: %v", err)
+	}
+
+	return &pb.Void{}, nil
 }
 
 func (m *TransactionManager) GetAll(req *pb.TransactionGAReq) (*pb.TransactionGARes, error) {
@@ -123,12 +153,32 @@ func (m *TransactionManager) GetAll(req *pb.TransactionGAReq) (*pb.TransactionGA
 
 	var transactions []*pb.TransactionGRes
 	for cursor.Next(context.Background()) {
-		var transaction pb.TransactionGRes
-		err := cursor.Decode(&transaction)
+		var transactionData struct {
+			ID              primitive.ObjectID `bson:"_id"`
+			UserID          string             `bson:"user_id"`
+			AccountID       string             `bson:"account_id"`
+			CategoryID      string             `bson:"category_id"`
+			Amount          float32            `bson:"amount"`
+			Type            string             `bson:"type"`
+			Description     string             `bson:"description"`
+			CreatedDatetime time.Time          `bson:"created_datetime"`
+		}
+		err := cursor.Decode(&transactionData)
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode transaction: %v", err)
 		}
-		transactions = append(transactions, &transaction)
+
+		transaction := &pb.TransactionGRes{
+			Id:              transactionData.ID.Hex(),
+			UserId:          transactionData.UserID,
+			AccountId:       transactionData.AccountID,
+			CategoryId:      transactionData.CategoryID,
+			Amount:          transactionData.Amount,
+			Type:            transactionData.Type,
+			Description:     transactionData.Description,
+			CreatedDatetime: transactionData.CreatedDatetime.Format(time.RFC3339),
+		}
+		transactions = append(transactions, transaction)
 	}
 
 	if err := cursor.Err(); err != nil {

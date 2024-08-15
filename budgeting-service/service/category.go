@@ -23,7 +23,7 @@ func (s *CategoryService) GetByID(ctx context.Context, req *pb.ByID) (*pb.Catego
 	return s.storage.Category().GetByID(req)
 }
 
-func (s *CategoryService) Update(ctx context.Context, req *pb.CategoryUpdate) (*pb.Void, error) {
+func (s *CategoryService) Update(ctx context.Context, req *pb.CategoryUReq) (*pb.Void, error) {
 	return s.storage.Category().Update(req)
 }
 

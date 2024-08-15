@@ -15,9 +15,16 @@ service GoalService {
     rpc GetAll(GoalGAReq) returns (GoalGARes);
 }
 
-
 message GoalCReq {
     string user_id = 1;
+    string name = 2;
+    float target_amount = 3;
+    float current_amount = 4;
+    string deadline = 5;
+    string status = 6;
+}
+
+message GoalCReqForSwagger {
     string name = 2;
     float target_amount = 3;
     float current_amount = 4;
@@ -33,9 +40,20 @@ message GoalUReq {
     string status = 5;
 }
 
+message GoalUReqForSwagger {
+    string name = 2;
+    float target_amount = 3;
+    string deadline = 4;
+    string status = 5;
+}
+
 message GoalCurrentAmountUReq {
     string id = 1;
-    string current_amount = 2;
+    float current_amount = 2;
+}
+
+message GoalCurrentAmountUReqForSwagger {
+    float current_amount = 2;
 }
 
 message GoalGRes {

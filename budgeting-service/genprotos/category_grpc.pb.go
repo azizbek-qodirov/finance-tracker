@@ -32,7 +32,7 @@ const (
 type CategoryServiceClient interface {
 	Create(ctx context.Context, in *CategoryCReq, opts ...grpc.CallOption) (*Void, error)
 	GetByID(ctx context.Context, in *ByID, opts ...grpc.CallOption) (*CategoryGRes, error)
-	Update(ctx context.Context, in *CategoryUpdate, opts ...grpc.CallOption) (*Void, error)
+	Update(ctx context.Context, in *CategoryUReq, opts ...grpc.CallOption) (*Void, error)
 	Delete(ctx context.Context, in *ByID, opts ...grpc.CallOption) (*Void, error)
 	GetAll(ctx context.Context, in *CategoryGAReq, opts ...grpc.CallOption) (*CategoryGARes, error)
 }
@@ -65,7 +65,7 @@ func (c *categoryServiceClient) GetByID(ctx context.Context, in *ByID, opts ...g
 	return out, nil
 }
 
-func (c *categoryServiceClient) Update(ctx context.Context, in *CategoryUpdate, opts ...grpc.CallOption) (*Void, error) {
+func (c *categoryServiceClient) Update(ctx context.Context, in *CategoryUReq, opts ...grpc.CallOption) (*Void, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Void)
 	err := c.cc.Invoke(ctx, CategoryService_Update_FullMethodName, in, out, cOpts...)
@@ -101,7 +101,7 @@ func (c *categoryServiceClient) GetAll(ctx context.Context, in *CategoryGAReq, o
 type CategoryServiceServer interface {
 	Create(context.Context, *CategoryCReq) (*Void, error)
 	GetByID(context.Context, *ByID) (*CategoryGRes, error)
-	Update(context.Context, *CategoryUpdate) (*Void, error)
+	Update(context.Context, *CategoryUReq) (*Void, error)
 	Delete(context.Context, *ByID) (*Void, error)
 	GetAll(context.Context, *CategoryGAReq) (*CategoryGARes, error)
 	mustEmbedUnimplementedCategoryServiceServer()
@@ -117,7 +117,7 @@ func (UnimplementedCategoryServiceServer) Create(context.Context, *CategoryCReq)
 func (UnimplementedCategoryServiceServer) GetByID(context.Context, *ByID) (*CategoryGRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByID not implemented")
 }
-func (UnimplementedCategoryServiceServer) Update(context.Context, *CategoryUpdate) (*Void, error) {
+func (UnimplementedCategoryServiceServer) Update(context.Context, *CategoryUReq) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedCategoryServiceServer) Delete(context.Context, *ByID) (*Void, error) {
@@ -176,7 +176,7 @@ func _CategoryService_GetByID_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _CategoryService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CategoryUpdate)
+	in := new(CategoryUReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -188,7 +188,7 @@ func _CategoryService_Update_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: CategoryService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CategoryServiceServer).Update(ctx, req.(*CategoryUpdate))
+		return srv.(CategoryServiceServer).Update(ctx, req.(*CategoryUReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

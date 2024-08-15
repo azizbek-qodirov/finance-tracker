@@ -54,8 +54,19 @@ func (m *GoalManager) GetByID(req *pb.ByID) (*pb.GoalGRes, error) {
 		return nil, fmt.Errorf("invalid goal ID: %v", err)
 	}
 
-	var goal pb.GoalGRes
-	err = m.Collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&goal)
+	var goalData struct {
+		ID            primitive.ObjectID `bson:"_id"`
+		UserID        string             `bson:"user_id"`
+		Name          string             `bson:"name"`
+		TargetAmount  float32            `bson:"target_amount"`
+		CurrentAmount float32            `bson:"current_amount"`
+		Deadline      time.Time          `bson:"deadline"`
+		Status        string             `bson:"status"`
+		CreatedAt     time.Time          `bson:"created_at"`
+		UpdatedAt     time.Time          `bson:"updated_at"`
+	}
+
+	err = m.Collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&goalData)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, fmt.Errorf("goal not found")
@@ -63,7 +74,17 @@ func (m *GoalManager) GetByID(req *pb.ByID) (*pb.GoalGRes, error) {
 		return nil, fmt.Errorf("failed to get goal: %v", err)
 	}
 
-	return &goal, nil
+	goal := &pb.GoalGRes{
+		Id:            goalData.ID.Hex(),
+		UserId:        goalData.UserID,
+		Name:          goalData.Name,
+		TargetAmount:  goalData.TargetAmount,
+		CurrentAmount: goalData.CurrentAmount,
+		Deadline:      goalData.Deadline.Format("2006-01-02"), // Format deadline as string
+		Status:        goalData.Status,
+	}
+
+	return goal, nil
 }
 
 func (m *GoalManager) Update(req *pb.GoalUReq) (*pb.Void, error) {
@@ -181,12 +202,34 @@ func (m *GoalManager) GetAll(req *pb.GoalGAReq) (*pb.GoalGARes, error) {
 
 	var goals []*pb.GoalGRes
 	for cursor.Next(context.Background()) {
-		var goal pb.GoalGRes
-		err := cursor.Decode(&goal)
+		var goalData struct { // Temporary struct for decoding
+			ID            primitive.ObjectID `bson:"_id"`
+			UserID        string             `bson:"user_id"`
+			Name          string             `bson:"name"`
+			TargetAmount  float32            `bson:"target_amount"`
+			CurrentAmount float32            `bson:"current_amount"`
+			Deadline      time.Time          `bson:"deadline"`
+			Status        string             `bson:"status"`
+			CreatedAt     time.Time          `bson:"created_at"`
+			UpdatedAt     time.Time          `bson:"updated_at"`
+		}
+
+		err := cursor.Decode(&goalData)
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode goal: %v", err)
 		}
-		goals = append(goals, &goal)
+
+		// Create GoalGRes and format the deadline
+		goal := &pb.GoalGRes{
+			Id:            goalData.ID.Hex(),
+			UserId:        goalData.UserID,
+			Name:          goalData.Name,
+			TargetAmount:  goalData.TargetAmount,
+			CurrentAmount: goalData.CurrentAmount,
+			Deadline:      goalData.Deadline.Format("2006-01-02"), // Format deadline
+			Status:        goalData.Status,
+		}
+		goals = append(goals, goal)
 	}
 
 	if err := cursor.Err(); err != nil {

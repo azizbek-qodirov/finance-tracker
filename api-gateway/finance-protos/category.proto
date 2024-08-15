@@ -9,7 +9,7 @@ import "finance-protos/void.proto";
 service CategoryService {
     rpc Create(CategoryCReq) returns (Void);
     rpc GetByID(ByID) returns (CategoryGRes);
-    rpc Update(CategoryUpdate) returns (Void);
+    rpc Update(CategoryUReq) returns (Void);
     rpc Delete(ByID) returns (Void);
     rpc GetAll(CategoryGAReq) returns (CategoryGARes);
 }
@@ -20,10 +20,20 @@ message CategoryCReq {
     string type = 3;
 }
 
-message CategoryUpdate {
+message CategoryCReqForSwagger {
+    string name = 1;
+    string type = 2;
+}
+
+message CategoryUReq {
     string id = 1;
     string name = 2;
 }
+
+message CategoryUReqForSwagger {
+    string name = 1;
+}
+
 
 message CategoryGRes {
     string id = 1;

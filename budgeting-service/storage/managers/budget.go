@@ -50,6 +50,7 @@ func (m *BudgetManager) Create(req *pb.BudgetCReq) (*pb.Void, error) {
 	}
 
 	fmt.Println("Created budget with ID:", result.InsertedID)
+
 	return &pb.Void{}, nil
 }
 
@@ -59,8 +60,18 @@ func (m *BudgetManager) GetByID(req *pb.ByID) (*pb.BudgetGRes, error) {
 		return nil, fmt.Errorf("invalid budget ID: %v", err)
 	}
 
-	var budget pb.BudgetGRes
-	err = m.Collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&budget)
+	var budgetData struct { // Temporary struct for decoding
+		ID         primitive.ObjectID `bson:"_id"`
+		UserID     string             `bson:"user_id"`
+		CategoryID string             `bson:"category_id"`
+		Amount     float32            `bson:"amount"`
+		Period     string             `bson:"period"`
+		StartDate  time.Time          `bson:"start_date"`
+		EndDate    time.Time          `bson:"end_date"`
+		CreatedAt  time.Time          `bson:"created_at"`
+		UpdatedAt  time.Time          `bson:"updated_at"`
+	}
+	err = m.Collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&budgetData)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, fmt.Errorf("budget not found")
@@ -68,7 +79,17 @@ func (m *BudgetManager) GetByID(req *pb.ByID) (*pb.BudgetGRes, error) {
 		return nil, fmt.Errorf("failed to get budget: %v", err)
 	}
 
-	return &budget, nil
+	budget := &pb.BudgetGRes{
+		Id:         budgetData.ID.Hex(),
+		UserId:     budgetData.UserID,
+		CategoryId: budgetData.CategoryID,
+		Amount:     budgetData.Amount,
+		Period:     budgetData.Period,
+		StartDate:  budgetData.StartDate.Format("2006-01-02"), // Format start_date
+		EndDate:    budgetData.EndDate.Format("2006-01-02"),   // Format end_date
+	}
+
+	return budget, nil
 }
 
 func (m *BudgetManager) Update(req *pb.BudgetUReq) (*pb.Void, error) {
@@ -138,11 +159,13 @@ func (m *BudgetManager) GetAll(req *pb.BudgetGAreq) (*pb.BudgetGARes, error) {
 
 	opts := options.Find()
 
-	if req.Pagination.Limit != 0 {
-		opts.SetLimit(req.Pagination.Limit)
-	}
-	if req.Pagination.Offset != 0 {
-		opts.SetSkip(req.Pagination.Offset)
+	if req.Pagination != nil { // Check if Pagination is not nil
+		if req.Pagination.Limit > 0 {
+			opts.SetLimit(req.Pagination.Limit)
+		}
+		if req.Pagination.Offset > 0 {
+			opts.SetSkip(req.Pagination.Offset)
+		}
 	}
 
 	cursor, err := m.Collection.Find(context.Background(), filter, opts)
@@ -153,12 +176,33 @@ func (m *BudgetManager) GetAll(req *pb.BudgetGAreq) (*pb.BudgetGARes, error) {
 
 	var budgets []*pb.BudgetGRes
 	for cursor.Next(context.Background()) {
-		var budget pb.BudgetGRes
-		err := cursor.Decode(&budget)
+		var budgetData struct { // Temporary struct for decoding
+			ID         primitive.ObjectID `bson:"_id"`
+			UserID     string             `bson:"user_id"`
+			CategoryID string             `bson:"category_id"`
+			Amount     float32            `bson:"amount"`
+			Period     string             `bson:"period"`
+			StartDate  time.Time          `bson:"start_date"`
+			EndDate    time.Time          `bson:"end_date"`
+			CreatedAt  time.Time          `bson:"created_at"`
+			UpdatedAt  time.Time          `bson:"updated_at"`
+		}
+
+		err := cursor.Decode(&budgetData)
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode budget: %v", err)
 		}
-		budgets = append(budgets, &budget)
+
+		budget := &pb.BudgetGRes{
+			Id:         budgetData.ID.Hex(),
+			UserId:     budgetData.UserID,
+			CategoryId: budgetData.CategoryID,
+			Amount:     budgetData.Amount,
+			Period:     budgetData.Period,
+			StartDate:  budgetData.StartDate.Format("2006-01-02"), // Format start_date
+			EndDate:    budgetData.EndDate.Format("2006-01-02"),   // Format end_date
+		}
+		budgets = append(budgets, budget)
 	}
 
 	if err := cursor.Err(); err != nil {

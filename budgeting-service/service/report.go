@@ -23,11 +23,10 @@ func (s *ReportService) GetIncomes(ctx context.Context, req *pb.IncomeGReq) (*pb
 	return s.storage.Report().GetIncomes(req)
 }
 
-// Uncomment and implement when ready
-// func (s *ReportService) BudgetPerformance(ctx context.Context, req *pb.BudgetPerReq) (*pb.BudgetPerGet, error) {
-// 	return s.storage.Report().BudgetPerformance(req)
-// }
+func (s *ReportService) BudgetPerformance(ctx context.Context, req *pb.BudgetPerReq) (*pb.BudgetPerGet, error) {
+	return s.storage.Report().BudgetPerformance(req)
+}
 
-// func (s *ReportService) GoalProgress(ctx context.Context, req *pb.GoalProgresReq) (*pb.GoalProgresGet, error) {
-// 	return s.storage.Report().GoalProgress(req)
-// }
+func (s *ReportService) GoalProgress(ctx context.Context, req *pb.GoalProgresReq) (*pb.GoalProgresGet, error) {
+	return s.storage.Report().GoalProgress(req)
+}

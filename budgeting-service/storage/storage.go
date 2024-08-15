@@ -31,7 +31,7 @@ type BudgetI interface {
 type CategoryI interface {
 	Create(*pb.CategoryCReq) (*pb.Void, error)
 	GetByID(*pb.ByID) (*pb.CategoryGRes, error)
-	Update(*pb.CategoryUpdate) (*pb.Void, error)
+	Update(*pb.CategoryUReq) (*pb.Void, error)
 	Delete(*pb.ByID) (*pb.Void, error)
 	GetAll(*pb.CategoryGAReq) (*pb.CategoryGARes, error)
 }
@@ -48,12 +48,13 @@ type GoalI interface {
 type ReportI interface {
 	GetSpendings(*pb.SpendingGReq) (*pb.SpendingGRes, error)
 	GetIncomes(*pb.IncomeGReq) (*pb.IncomeGRes, error)
-	// BudgetPerformance(*pb.BudgetPerReq) (*pb.BudgetPerGet, error) // Uncomment when ready
-	// GoalProgress(*pb.GoalProgresReq) (*pb.GoalProgresGet, error) // Uncomment when ready
+	BudgetPerformance(*pb.BudgetPerReq) (*pb.BudgetPerGet, error)
+	GoalProgress(*pb.GoalProgresReq) (*pb.GoalProgresGet, error)
 }
 
 type TransactionI interface {
 	Create(*pb.TransactionCReq) (*pb.Void, error)
 	GetByID(*pb.ByID) (*pb.TransactionGRes, error)
+	Delete(*pb.ByID) (*pb.Void, error)
 	GetAll(*pb.TransactionGAReq) (*pb.TransactionGARes, error)
 }

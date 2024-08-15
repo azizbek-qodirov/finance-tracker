@@ -58,7 +58,7 @@ func (m *CategoryManager) GetByID(req *pb.ByID) (*pb.CategoryGRes, error) {
 	return &category, nil
 }
 
-func (m *CategoryManager) Update(req *pb.CategoryUpdate) (*pb.Void, error) {
+func (m *CategoryManager) Update(req *pb.CategoryUReq) (*pb.Void, error) {
 	objID, err := primitive.ObjectIDFromHex(req.Id)
 	if err != nil {
 		return nil, fmt.Errorf("invalid category ID: %v", err)

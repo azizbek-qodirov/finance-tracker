@@ -38,7 +38,7 @@ func (m *UserManager) Register(req models.RegisterReq, mongoUser *models.MongoAc
 	mongoAccount := models.MongoAccount{
 		UserID:    mongoUser.UserID,
 		Name:      "",
-		Type:      "",
+		Type:      "cash",
 		Balance:   0,
 		Currency:  "USD",
 		CreatedAt: &now,

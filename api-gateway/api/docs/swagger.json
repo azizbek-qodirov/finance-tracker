@@ -4,14 +4,14 @@
         "contact": {}
     },
     "paths": {
-        "/exercise/{id}": {
+        "/v1/account": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get an exercise by its ID",
+                "description": "Get user account by User ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -19,296 +19,14 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Exercise"
+                    "Account"
                 ],
-                "summary": "Get exercise",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Exercise ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Get Account",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Account details",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.ExerciseGResUReq"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid exercise ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/exercises": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all exercises",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Exercise"
-                ],
-                "summary": "Get all exercises",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Lesson ID",
-                        "name": "lesson_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Exercise type",
-                        "name": "type",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.ExerciseGARes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameters",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/leaderboard": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get the leaderboard sorted by XP",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "leaderboard"
-                ],
-                "summary": "Get Leaderboard",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/genprotos.LeadboardRes"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/lesson/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get a lesson by it's UUID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Lesson"
-                ],
-                "summary": "Get lesson",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Leesson ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.LessonCReqGRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid lesson ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/lessons": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all lessons",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Lesson"
-                ],
-                "summary": "Get all lessons",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "lang_1",
-                        "name": "lang_1",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "lang_2",
-                        "name": "lang_2",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "level",
-                        "name": "level",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "order",
-                        "name": "order",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.LessonGARes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameters",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/mydata": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieves user data",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "UserData"
-                ],
-                "summary": "Get User Data",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.MyDataResponse"
+                            "$ref": "#/definitions/genprotos.AccountGRes"
                         }
                     },
                     "400": {
@@ -317,6 +35,12 @@
                             "type": "string"
                         }
                     },
+                    "404": {
+                        "description": "Account not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "500": {
                         "description": "Server error",
                         "schema": {
@@ -324,16 +48,14 @@
                         }
                     }
                 }
-            }
-        },
-        "/start-test": {
-            "post": {
+            },
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Start a test by checking the answers of the provided quiz requests against the exercises of the specified lesson",
+                "description": "Update user account details",
                 "consumes": [
                     "application/json"
                 ],
@@ -341,25 +63,37 @@
                     "application/json"
                 ],
                 "tags": [
-                    "quiz"
+                    "Account"
                 ],
-                "summary": "Start a test",
+                "summary": "Update Account",
                 "parameters": [
                     {
-                        "description": "Test Check Request",
-                        "name": "YourAnswers",
+                        "description": "Account update request",
+                        "name": "account",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genprotos.TestCheckReqForSwagger"
+                            "$ref": "#/definitions/genprotos.AccountUReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Account updated successfully",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.TestResultRes"
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "500": {
@@ -371,14 +105,14 @@
                 }
             }
         },
-        "/vocabularies": {
+        "/v1/account/balance": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Gets vocabularies",
+                "description": "Get user account balance by User ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -386,44 +120,79 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Vocabulary"
+                    "Account"
                 ],
-                "summary": "Get Vocabularies",
+                "summary": "Get Account Balance",
+                "responses": {
+                    "200": {
+                        "description": "Account balance",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.AccountBalanceGRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid user ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update user account balance",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Update Account Balance",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Lesson ID",
-                        "name": "lesson_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Exercise type",
-                        "name": "type",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "offset",
-                        "name": "offset",
-                        "in": "query"
+                        "description": "Account balance update request",
+                        "name": "balance",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.AccountBalanceUReqForSwagger"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Account balance updated successfully",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.VocabulariesGARes"
+                            "type": "string"
                         }
                     },
                     "400": {
-                        "description": "Invalid parameters",
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found",
                         "schema": {
                             "type": "string"
                         }
@@ -437,14 +206,14 @@
                 }
             }
         },
-        "/vocabulary/{id}": {
+        "/v1/budget": {
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Adds an exercise to the vocabulary",
+                "description": "Creates a new budget",
                 "consumes": [
                     "application/json"
                 ],
@@ -452,13 +221,64 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Vocabulary"
+                    "Budget"
                 ],
-                "summary": "Add to Vocabulary",
+                "summary": "Create Budget",
+                "parameters": [
+                    {
+                        "description": "Budget creation request",
+                        "name": "budget",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.BudgetCReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Budget created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/budget/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get budget by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget"
+                ],
+                "summary": "Get Budget",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Exercise ID",
+                        "description": "Budget ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -466,13 +286,81 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Exercise added to vocabulary",
+                        "description": "Budget details",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.BudgetGRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid budget ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Budget not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update budget details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget"
+                ],
+                "summary": "Update Budget",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Budget ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Budget update request",
+                        "name": "budget",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.BudgetUReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Budget updated successfully",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "400": {
-                        "description": "Invalid exercise ID",
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Budget not found",
                         "schema": {
                             "type": "string"
                         }
@@ -491,7 +379,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Deletes an exercise from the vocabulary",
+                "description": "Delete budget by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -499,13 +387,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Vocabulary"
+                    "Budget"
                 ],
-                "summary": "Delete from Vocabulary",
+                "summary": "Delete Budget",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Exercise ID",
+                        "description": "Budget ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -513,13 +401,1308 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Exercise deleted from vocabulary",
+                        "description": "Budget deleted successfully",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "400": {
-                        "description": "Invalid exercise ID",
+                        "description": "Invalid budget ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Budget not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/budgets": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List all budgets with filtering and pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget"
+                ],
+                "summary": "List Budgets",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "Minimum amount",
+                        "name": "amount_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "Maximum amount",
+                        "name": "amount_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Budget period",
+                        "name": "period",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of budgets",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.BudgetGARes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/categories": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List all categories with pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "List Categories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of categories",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.CategoryGARes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/category": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Create Category",
+                "parameters": [
+                    {
+                        "description": "Category creation request",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.CategoryCReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/category/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get category by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get Category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category details",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.CategoryGRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid category ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update category details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Update Category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Category update request",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.CategoryUReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete category by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete Category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Category deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid category ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/goal": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new goal",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goal"
+                ],
+                "summary": "Create Goal",
+                "parameters": [
+                    {
+                        "description": "Goal creation request",
+                        "name": "goal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GoalCReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Goal created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/goal/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get goal by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goal"
+                ],
+                "summary": "Get Goal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Goal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Goal details",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GoalGRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid goal ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Goal not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update goal details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goal"
+                ],
+                "summary": "Update Goal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Goal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Goal update request",
+                        "name": "goal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GoalUReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Goal updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Goal not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete goal by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goal"
+                ],
+                "summary": "Delete Goal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Goal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Goal deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid goal ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Goal not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/goal/{id}/current_amount": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update the current amount of a goal",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goal"
+                ],
+                "summary": "Update Goal Current Amount",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Goal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Goal current amount update request",
+                        "name": "amount",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GoalCurrentAmountUReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Goal current amount updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Goal not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/goals": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List all goals with filtering and pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goal"
+                ],
+                "summary": "List Goals",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Goal status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "Minimum target amount",
+                        "name": "target_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "Maximum target amount",
+                        "name": "target_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deadline from (YYYY-MM-DD)",
+                        "name": "deadline_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deadline to (YYYY-MM-DD)",
+                        "name": "deadline_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of goals",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GoalGARes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/report/budget-performance": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a report of budget performance with filtering",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get Budget Performance Report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Budget period",
+                        "name": "period",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "start_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "end_date",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Budget performance report",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.BudgetPerGet"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/report/goal-progress": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a report of goal progress with filtering",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get Goal Progress Report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Goal status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deadline from (YYYY-MM-DD)",
+                        "name": "deadline_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deadline to (YYYY-MM-DD)",
+                        "name": "deadline_to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Goal progress report",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GoalProgresGet"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/report/incomes": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a report of incomes with filtering and pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get Incomes Report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "date_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "date_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Income report",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.IncomeGRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/report/spendings": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a report of spendings with filtering and pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get Spendings Report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "date_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "date_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Spending report",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.SpendingGRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/transaction": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Create Transaction",
+                "parameters": [
+                    {
+                        "description": "Transaction creation request",
+                        "name": "transaction",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.TransactionCReqForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/transaction/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get transaction by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Get Transaction",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction details",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.TransactionGRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid transaction ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete transaction by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Delete Transaction",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Transaction deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid transaction ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/transactions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List all transactions with filtering and pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "List Transactions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Account ID",
+                        "name": "account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "Amount",
+                        "name": "amount",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Transaction type",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "date_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "date_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of transactions",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.TransactionGARes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters",
                         "schema": {
                             "type": "string"
                         }
@@ -535,47 +1718,145 @@
         }
     },
     "definitions": {
-        "genprotos.CheckReq": {
+        "genprotos.AccountBalanceGRes": {
             "type": "object",
             "properties": {
-                "correct_answer": {
-                    "type": "string"
+                "balance": {
+                    "type": "number"
                 },
-                "exercise_id": {
+                "currency": {
                     "type": "string"
                 }
             }
         },
-        "genprotos.ExerciseGARes": {
+        "genprotos.AccountBalanceUReqForSwagger": {
             "type": "object",
             "properties": {
-                "count": {
-                    "type": "integer"
+                "balance": {
+                    "type": "number"
+                }
+            }
+        },
+        "genprotos.AccountGRes": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
                 },
-                "exercises": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.AccountUReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.BudgetCReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "period": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.BudgetGARes": {
+            "type": "object",
+            "properties": {
+                "budgets": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.ExerciseGResUReq"
+                        "$ref": "#/definitions/genprotos.BudgetGRes"
                     }
                 }
             }
         },
-        "genprotos.ExerciseGResUReq": {
+        "genprotos.BudgetGRes": {
             "type": "object",
             "properties": {
-                "correct_answer": {
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "end_date": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "lesson_id": {
+                "period": {
                     "type": "string"
                 },
-                "options": {
+                "start_date": {
                     "type": "string"
                 },
-                "question": {
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.BudgetPerGet": {
+            "type": "object",
+            "properties": {
+                "performances": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.PeriodBudgetPer"
+                    }
+                }
+            }
+        },
+        "genprotos.BudgetUReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "period": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.CategoryCReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "name": {
                     "type": "string"
                 },
                 "type": {
@@ -583,175 +1864,322 @@
                 }
             }
         },
-        "genprotos.LeadboardRes": {
+        "genprotos.CategoryGARes": {
             "type": "object",
             "properties": {
-                "users": {
+                "categories": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.LeadboardUserRes"
+                        "$ref": "#/definitions/genprotos.CategoryGRes"
                     }
                 }
             }
         },
-        "genprotos.LeadboardUserRes": {
+        "genprotos.CategoryGRes": {
             "type": "object",
             "properties": {
-                "daily_streak": {
-                    "type": "integer"
-                },
-                "level": {
-                    "type": "string"
-                },
-                "native_lang": {
-                    "type": "string"
-                },
-                "played_games_count": {
-                    "type": "integer"
-                },
-                "user_id": {
-                    "type": "string"
-                },
-                "winning_percentage": {
-                    "type": "number"
-                },
-                "xp": {
-                    "type": "integer"
-                }
-            }
-        },
-        "genprotos.LessonCReqGRes": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
                 "id": {
-                    "type": "string"
-                },
-                "lang_1": {
-                    "type": "string"
-                },
-                "lang_2": {
-                    "type": "string"
-                },
-                "level": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "order": {
-                    "type": "integer"
+                "type": {
+                    "type": "string"
                 },
-                "title": {
+                "user_id": {
                     "type": "string"
                 }
             }
         },
-        "genprotos.LessonGARes": {
+        "genprotos.CategoryUReqForSwagger": {
             "type": "object",
             "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "lessons": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/genprotos.LessonCReqGRes"
-                    }
+                "name": {
+                    "type": "string"
                 }
             }
         },
-        "genprotos.TestCheckReqForSwagger": {
+        "genprotos.GoalCReqForSwagger": {
             "type": "object",
             "properties": {
-                "lesson_id": {
-                    "type": "string"
-                },
-                "requests": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/genprotos.CheckReq"
-                    }
-                }
-            }
-        },
-        "genprotos.TestResultRes": {
-            "type": "object",
-            "properties": {
-                "correct_answers_count": {
-                    "type": "integer"
-                },
-                "feedback": {
-                    "type": "string"
-                },
-                "tests_count": {
-                    "type": "integer"
-                },
-                "xp_given": {
-                    "type": "integer"
-                }
-            }
-        },
-        "genprotos.UserDataGRes": {
-            "type": "object",
-            "properties": {
-                "daily_streak": {
-                    "type": "integer"
-                },
-                "level": {
-                    "type": "string"
-                },
-                "native_lang": {
-                    "type": "string"
-                },
-                "played_games_count": {
-                    "type": "integer"
-                },
-                "winning_percentage": {
+                "current_amount": {
                     "type": "number"
                 },
-                "xp": {
-                    "type": "integer"
+                "deadline": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "target_amount": {
+                    "type": "number"
                 }
             }
         },
-        "genprotos.VocabulariesGARes": {
+        "genprotos.GoalCurrentAmountUReqForSwagger": {
             "type": "object",
             "properties": {
-                "vocabularies": {
+                "current_amount": {
+                    "type": "number"
+                }
+            }
+        },
+        "genprotos.GoalGARes": {
+            "type": "object",
+            "properties": {
+                "goals": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.ExerciseGResUReq"
+                        "$ref": "#/definitions/genprotos.GoalGRes"
                     }
                 }
             }
         },
-        "handlers.MyDataResponse": {
+        "genprotos.GoalGRes": {
             "type": "object",
             "properties": {
-                "user": {
-                    "$ref": "#/definitions/models.User"
+                "current_amount": {
+                    "type": "number"
                 },
-                "user_data": {
-                    "$ref": "#/definitions/genprotos.UserDataGRes"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "properties": {
-                "email": {
+                "deadline": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "password": {
+                "name": {
                     "type": "string"
                 },
-                "username": {
+                "status": {
+                    "type": "string"
+                },
+                "target_amount": {
+                    "type": "number"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.GoalProgresGet": {
+            "type": "object",
+            "properties": {
+                "goals": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.GoalProgress"
+                    }
+                }
+            }
+        },
+        "genprotos.GoalProgress": {
+            "type": "object",
+            "properties": {
+                "current_amount": {
+                    "type": "number"
+                },
+                "deadline": {
+                    "type": "string"
+                },
+                "goal_name": {
+                    "type": "string"
+                },
+                "progress": {
+                    "type": "number"
+                },
+                "target_amount": {
+                    "type": "number"
+                }
+            }
+        },
+        "genprotos.GoalUReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "deadline": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "target_amount": {
+                    "type": "number"
+                }
+            }
+        },
+        "genprotos.IncomeGReq": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
+                "date_from": {
+                    "type": "string"
+                },
+                "date_to": {
+                    "type": "string"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/genprotos.Pagination"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.IncomeGRes": {
+            "type": "object",
+            "properties": {
+                "request": {
+                    "$ref": "#/definitions/genprotos.IncomeGReq"
+                },
+                "total_amount": {
+                    "type": "number"
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.TransactionGARes"
+                    }
+                }
+            }
+        },
+        "genprotos.Pagination": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                }
+            }
+        },
+        "genprotos.PeriodBudgetPer": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "period": {
+                    "type": "string"
+                },
+                "progress": {
+                    "type": "number"
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "target_amount": {
+                    "type": "number"
+                },
+                "total_spendings": {
+                    "type": "number"
+                }
+            }
+        },
+        "genprotos.SpendingGReq": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
+                "date_from": {
+                    "type": "string"
+                },
+                "date_to": {
+                    "type": "string"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/genprotos.Pagination"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.SpendingGRes": {
+            "type": "object",
+            "properties": {
+                "request": {
+                    "$ref": "#/definitions/genprotos.SpendingGReq"
+                },
+                "total_amount": {
+                    "type": "number"
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.TransactionGARes"
+                    }
+                }
+            }
+        },
+        "genprotos.TransactionCReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.TransactionGARes": {
+            "type": "object",
+            "properties": {
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.TransactionGRes"
+                    }
+                }
+            }
+        },
+        "genprotos.TransactionGRes": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "created_datetime": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "string"
                 }
             }

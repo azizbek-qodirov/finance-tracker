@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion8
 const (
 	TransactionService_Create_FullMethodName  = "/finance.TransactionService/Create"
 	TransactionService_GetByID_FullMethodName = "/finance.TransactionService/GetByID"
+	TransactionService_Delete_FullMethodName  = "/finance.TransactionService/Delete"
 	TransactionService_GetAll_FullMethodName  = "/finance.TransactionService/GetAll"
 )
 
@@ -30,6 +31,7 @@ const (
 type TransactionServiceClient interface {
 	Create(ctx context.Context, in *TransactionCReq, opts ...grpc.CallOption) (*Void, error)
 	GetByID(ctx context.Context, in *ByID, opts ...grpc.CallOption) (*TransactionGRes, error)
+	Delete(ctx context.Context, in *ByID, opts ...grpc.CallOption) (*Void, error)
 	GetAll(ctx context.Context, in *TransactionGAReq, opts ...grpc.CallOption) (*TransactionGARes, error)
 }
 
@@ -61,6 +63,16 @@ func (c *transactionServiceClient) GetByID(ctx context.Context, in *ByID, opts .
 	return out, nil
 }
 
+func (c *transactionServiceClient) Delete(ctx context.Context, in *ByID, opts ...grpc.CallOption) (*Void, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Void)
+	err := c.cc.Invoke(ctx, TransactionService_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *transactionServiceClient) GetAll(ctx context.Context, in *TransactionGAReq, opts ...grpc.CallOption) (*TransactionGARes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TransactionGARes)
@@ -77,6 +89,7 @@ func (c *transactionServiceClient) GetAll(ctx context.Context, in *TransactionGA
 type TransactionServiceServer interface {
 	Create(context.Context, *TransactionCReq) (*Void, error)
 	GetByID(context.Context, *ByID) (*TransactionGRes, error)
+	Delete(context.Context, *ByID) (*Void, error)
 	GetAll(context.Context, *TransactionGAReq) (*TransactionGARes, error)
 	mustEmbedUnimplementedTransactionServiceServer()
 }
@@ -90,6 +103,9 @@ func (UnimplementedTransactionServiceServer) Create(context.Context, *Transactio
 }
 func (UnimplementedTransactionServiceServer) GetByID(context.Context, *ByID) (*TransactionGRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByID not implemented")
+}
+func (UnimplementedTransactionServiceServer) Delete(context.Context, *ByID) (*Void, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedTransactionServiceServer) GetAll(context.Context, *TransactionGAReq) (*TransactionGARes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
@@ -143,6 +159,24 @@ func _TransactionService_GetByID_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TransactionService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ByID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TransactionService_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServiceServer).Delete(ctx, req.(*ByID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TransactionService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TransactionGAReq)
 	if err := dec(in); err != nil {
@@ -175,6 +209,10 @@ var TransactionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetByID",
 			Handler:    _TransactionService_GetByID_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _TransactionService_Delete_Handler,
 		},
 		{
 			MethodName: "GetAll",

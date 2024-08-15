@@ -54,7 +54,7 @@ func (m *AccountManager) GetBalance(req *pb.ByUserID) (*pb.AccountBalanceGRes, e
 	filter := bson.M{"user_id": req.UserId}
 
 	var result struct {
-		Balance  float64 `bson:"balance"`
+		Balance  float32 `bson:"balance"`
 		Currency string  `bson:"currency"`
 	}
 
@@ -67,7 +67,7 @@ func (m *AccountManager) GetBalance(req *pb.ByUserID) (*pb.AccountBalanceGRes, e
 	}
 
 	return &pb.AccountBalanceGRes{
-		Balance:  float32(result.Balance),
+		Balance:  result.Balance,
 		Currency: result.Currency,
 	}, nil
 }

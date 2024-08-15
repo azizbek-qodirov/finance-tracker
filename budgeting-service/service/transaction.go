@@ -26,3 +26,7 @@ func (s *TransactionService) GetByID(ctx context.Context, req *pb.ByID) (*pb.Tra
 func (s *TransactionService) GetAll(ctx context.Context, req *pb.TransactionGAReq) (*pb.TransactionGARes, error) {
 	return s.storage.Transaction().GetAll(req)
 }
+
+func (s *TransactionService) Delete(ctx context.Context, req *pb.ByID) (*pb.Void, error) {
+	return s.storage.Transaction().Delete(req)
+}

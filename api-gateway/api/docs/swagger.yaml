@@ -1,414 +1,390 @@
 definitions:
-  genprotos.CheckReq:
+  genprotos.AccountBalanceGRes:
     properties:
-      correct_answer:
-        type: string
-      exercise_id:
+      balance:
+        type: number
+      currency:
         type: string
     type: object
-  genprotos.ExerciseGARes:
+  genprotos.AccountBalanceUReqForSwagger:
     properties:
-      count:
-        type: integer
-      exercises:
+      balance:
+        type: number
+    type: object
+  genprotos.AccountGRes:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      user_id:
+        type: string
+    type: object
+  genprotos.AccountUReq:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  genprotos.BudgetCReqForSwagger:
+    properties:
+      amount:
+        type: number
+      category_id:
+        type: string
+      end_date:
+        type: string
+      period:
+        type: string
+      start_date:
+        type: string
+    type: object
+  genprotos.BudgetGARes:
+    properties:
+      budgets:
         items:
-          $ref: '#/definitions/genprotos.ExerciseGResUReq'
+          $ref: '#/definitions/genprotos.BudgetGRes'
         type: array
     type: object
-  genprotos.ExerciseGResUReq:
+  genprotos.BudgetGRes:
     properties:
-      correct_answer:
+      amount:
+        type: number
+      category_id:
+        type: string
+      end_date:
         type: string
       id:
         type: string
-      lesson_id:
+      period:
         type: string
-      options:
+      start_date:
         type: string
-      question:
+      user_id:
+        type: string
+    type: object
+  genprotos.BudgetPerGet:
+    properties:
+      performances:
+        items:
+          $ref: '#/definitions/genprotos.PeriodBudgetPer'
+        type: array
+    type: object
+  genprotos.BudgetUReqForSwagger:
+    properties:
+      amount:
+        type: number
+      end_date:
+        type: string
+      id:
+        type: string
+      period:
+        type: string
+      start_date:
+        type: string
+    type: object
+  genprotos.CategoryCReqForSwagger:
+    properties:
+      name:
         type: string
       type:
         type: string
     type: object
-  genprotos.LeadboardRes:
+  genprotos.CategoryGARes:
     properties:
-      users:
+      categories:
         items:
-          $ref: '#/definitions/genprotos.LeadboardUserRes'
+          $ref: '#/definitions/genprotos.CategoryGRes'
         type: array
     type: object
-  genprotos.LeadboardUserRes:
+  genprotos.CategoryGRes:
     properties:
-      daily_streak:
-        type: integer
-      level:
-        type: string
-      native_lang:
-        type: string
-      played_games_count:
-        type: integer
-      user_id:
-        type: string
-      winning_percentage:
-        type: number
-      xp:
-        type: integer
-    type: object
-  genprotos.LessonCReqGRes:
-    properties:
-      content:
-        type: string
       id:
-        type: string
-      lang_1:
-        type: string
-      lang_2:
-        type: string
-      level:
         type: string
       name:
         type: string
-      order:
-        type: integer
-      title:
+      type:
+        type: string
+      user_id:
         type: string
     type: object
-  genprotos.LessonGARes:
+  genprotos.CategoryUReqForSwagger:
     properties:
-      count:
-        type: integer
-      lessons:
-        items:
-          $ref: '#/definitions/genprotos.LessonCReqGRes'
-        type: array
+      name:
+        type: string
     type: object
-  genprotos.TestCheckReqForSwagger:
+  genprotos.GoalCReqForSwagger:
     properties:
-      lesson_id:
-        type: string
-      requests:
-        items:
-          $ref: '#/definitions/genprotos.CheckReq'
-        type: array
-    type: object
-  genprotos.TestResultRes:
-    properties:
-      correct_answers_count:
-        type: integer
-      feedback:
-        type: string
-      tests_count:
-        type: integer
-      xp_given:
-        type: integer
-    type: object
-  genprotos.UserDataGRes:
-    properties:
-      daily_streak:
-        type: integer
-      level:
-        type: string
-      native_lang:
-        type: string
-      played_games_count:
-        type: integer
-      winning_percentage:
+      current_amount:
         type: number
-      xp:
-        type: integer
+      deadline:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      target_amount:
+        type: number
     type: object
-  genprotos.VocabulariesGARes:
+  genprotos.GoalCurrentAmountUReqForSwagger:
     properties:
-      vocabularies:
+      current_amount:
+        type: number
+    type: object
+  genprotos.GoalGARes:
+    properties:
+      goals:
         items:
-          $ref: '#/definitions/genprotos.ExerciseGResUReq'
+          $ref: '#/definitions/genprotos.GoalGRes'
         type: array
     type: object
-  handlers.MyDataResponse:
+  genprotos.GoalGRes:
     properties:
-      user:
-        $ref: '#/definitions/models.User'
-      user_data:
-        $ref: '#/definitions/genprotos.UserDataGRes'
-    type: object
-  models.User:
-    properties:
-      email:
+      current_amount:
+        type: number
+      deadline:
         type: string
       id:
         type: string
-      password:
+      name:
         type: string
-      username:
+      status:
+        type: string
+      target_amount:
+        type: number
+      user_id:
+        type: string
+    type: object
+  genprotos.GoalProgresGet:
+    properties:
+      goals:
+        items:
+          $ref: '#/definitions/genprotos.GoalProgress'
+        type: array
+    type: object
+  genprotos.GoalProgress:
+    properties:
+      current_amount:
+        type: number
+      deadline:
+        type: string
+      goal_name:
+        type: string
+      progress:
+        type: number
+      target_amount:
+        type: number
+    type: object
+  genprotos.GoalUReqForSwagger:
+    properties:
+      deadline:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      target_amount:
+        type: number
+    type: object
+  genprotos.IncomeGReq:
+    properties:
+      category_id:
+        type: string
+      date_from:
+        type: string
+      date_to:
+        type: string
+      pagination:
+        $ref: '#/definitions/genprotos.Pagination'
+      user_id:
+        type: string
+    type: object
+  genprotos.IncomeGRes:
+    properties:
+      request:
+        $ref: '#/definitions/genprotos.IncomeGReq'
+      total_amount:
+        type: number
+      transactions:
+        items:
+          $ref: '#/definitions/genprotos.TransactionGARes'
+        type: array
+    type: object
+  genprotos.Pagination:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  genprotos.PeriodBudgetPer:
+    properties:
+      category_id:
+        type: string
+      end_date:
+        type: string
+      period:
+        type: string
+      progress:
+        type: number
+      start_date:
+        type: string
+      target_amount:
+        type: number
+      total_spendings:
+        type: number
+    type: object
+  genprotos.SpendingGReq:
+    properties:
+      category_id:
+        type: string
+      date_from:
+        type: string
+      date_to:
+        type: string
+      pagination:
+        $ref: '#/definitions/genprotos.Pagination'
+      user_id:
+        type: string
+    type: object
+  genprotos.SpendingGRes:
+    properties:
+      request:
+        $ref: '#/definitions/genprotos.SpendingGReq'
+      total_amount:
+        type: number
+      transactions:
+        items:
+          $ref: '#/definitions/genprotos.TransactionGARes'
+        type: array
+    type: object
+  genprotos.TransactionCReqForSwagger:
+    properties:
+      account_id:
+        type: string
+      amount:
+        type: number
+      category_id:
+        type: string
+      description:
+        type: string
+      type:
+        type: string
+    type: object
+  genprotos.TransactionGARes:
+    properties:
+      transactions:
+        items:
+          $ref: '#/definitions/genprotos.TransactionGRes'
+        type: array
+    type: object
+  genprotos.TransactionGRes:
+    properties:
+      account_id:
+        type: string
+      amount:
+        type: number
+      category_id:
+        type: string
+      created_datetime:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      type:
+        type: string
+      user_id:
         type: string
     type: object
 info:
   contact: {}
 paths:
-  /exercise/{id}:
+  /v1/account:
     get:
       consumes:
       - application/json
-      description: Get an exercise by its ID
-      parameters:
-      - description: Exercise ID
-        in: path
-        name: id
-        required: true
-        type: string
+      description: Get user account by User ID
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Account details
           schema:
-            $ref: '#/definitions/genprotos.ExerciseGResUReq'
-        "400":
-          description: Invalid exercise ID
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get exercise
-      tags:
-      - Exercise
-  /exercises:
-    get:
-      consumes:
-      - application/json
-      description: Get all exercises
-      parameters:
-      - description: Lesson ID
-        in: query
-        name: lesson_id
-        type: string
-      - description: Exercise type
-        in: query
-        name: type
-        type: string
-      - description: limit
-        in: query
-        name: limit
-        type: integer
-      - description: offset
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/genprotos.ExerciseGARes'
-        "400":
-          description: Invalid parameters
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get all exercises
-      tags:
-      - Exercise
-  /leaderboard:
-    get:
-      description: Get the leaderboard sorted by XP
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/genprotos.LeadboardRes'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get Leaderboard
-      tags:
-      - leaderboard
-  /lesson/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get a lesson by it's UUID
-      parameters:
-      - description: Leesson ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/genprotos.LessonCReqGRes'
-        "400":
-          description: Invalid lesson ID
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get lesson
-      tags:
-      - Lesson
-  /lessons:
-    get:
-      consumes:
-      - application/json
-      description: Get all lessons
-      parameters:
-      - description: name
-        in: query
-        name: name
-        type: string
-      - description: lang_1
-        in: query
-        name: lang_1
-        type: string
-      - description: lang_2
-        in: query
-        name: lang_2
-        type: string
-      - description: level
-        in: query
-        name: level
-        type: string
-      - description: order
-        in: query
-        name: order
-        type: integer
-      - description: limit
-        in: query
-        name: limit
-        type: integer
-      - description: offset
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/genprotos.LessonGARes'
-        "400":
-          description: Invalid parameters
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get all lessons
-      tags:
-      - Lesson
-  /mydata:
-    get:
-      consumes:
-      - application/json
-      description: Retrieves user data
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handlers.MyDataResponse'
+            $ref: '#/definitions/genprotos.AccountGRes'
         "400":
           description: Invalid user ID
           schema:
             type: string
+        "404":
+          description: Account not found
+          schema:
+            type: string
         "500":
           description: Server error
           schema:
             type: string
       security:
       - BearerAuth: []
-      summary: Get User Data
+      summary: Get Account
       tags:
-      - UserData
-  /start-test:
-    post:
+      - Account
+    put:
       consumes:
       - application/json
-      description: Start a test by checking the answers of the provided quiz requests
-        against the exercises of the specified lesson
+      description: Update user account details
       parameters:
-      - description: Test Check Request
+      - description: Account update request
         in: body
-        name: YourAnswers
+        name: account
         required: true
         schema:
-          $ref: '#/definitions/genprotos.TestCheckReqForSwagger'
+          $ref: '#/definitions/genprotos.AccountUReq'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Account updated successfully
           schema:
-            $ref: '#/definitions/genprotos.TestResultRes'
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Account not found
+          schema:
+            type: string
         "500":
           description: Server error
           schema:
             type: string
       security:
       - BearerAuth: []
-      summary: Start a test
+      summary: Update Account
       tags:
-      - quiz
-  /vocabularies:
+      - Account
+  /v1/account/balance:
     get:
       consumes:
       - application/json
-      description: Gets vocabularies
-      parameters:
-      - description: Lesson ID
-        in: query
-        name: lesson_id
-        type: string
-      - description: Exercise type
-        in: query
-        name: type
-        type: string
-      - description: limit
-        in: query
-        name: limit
-        type: integer
-      - description: offset
-        in: query
-        name: offset
-        type: integer
+      description: Get user account balance by User ID
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Account balance
           schema:
-            $ref: '#/definitions/genprotos.VocabulariesGARes'
+            $ref: '#/definitions/genprotos.AccountBalanceGRes'
         "400":
-          description: Invalid parameters
+          description: Invalid user ID
+          schema:
+            type: string
+        "404":
+          description: Account not found
           schema:
             type: string
         "500":
@@ -417,16 +393,83 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Get Vocabularies
+      summary: Get Account Balance
       tags:
-      - Vocabulary
-  /vocabulary/{id}:
+      - Account
+    put:
+      consumes:
+      - application/json
+      description: Update user account balance
+      parameters:
+      - description: Account balance update request
+        in: body
+        name: balance
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.AccountBalanceUReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Account balance updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Account not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Account Balance
+      tags:
+      - Account
+  /v1/budget:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new budget
+      parameters:
+      - description: Budget creation request
+        in: body
+        name: budget
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.BudgetCReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Budget created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Budget
+      tags:
+      - Budget
+  /v1/budget/{id}:
     delete:
       consumes:
       - application/json
-      description: Deletes an exercise from the vocabulary
+      description: Delete budget by ID
       parameters:
-      - description: Exercise ID
+      - description: Budget ID
         in: path
         name: id
         required: true
@@ -435,11 +478,15 @@ paths:
       - application/json
       responses:
         "204":
-          description: Exercise deleted from vocabulary
+          description: Budget deleted successfully
           schema:
             type: string
         "400":
-          description: Invalid exercise ID
+          description: Invalid budget ID
+          schema:
+            type: string
+        "404":
+          description: Budget not found
           schema:
             type: string
         "500":
@@ -448,15 +495,15 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Delete from Vocabulary
+      summary: Delete Budget
       tags:
-      - Vocabulary
-    post:
+      - Budget
+    get:
       consumes:
       - application/json
-      description: Adds an exercise to the vocabulary
+      description: Get budget by ID
       parameters:
-      - description: Exercise ID
+      - description: Budget ID
         in: path
         name: id
         required: true
@@ -465,11 +512,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: Exercise added to vocabulary
+          description: Budget details
+          schema:
+            $ref: '#/definitions/genprotos.BudgetGRes'
+        "400":
+          description: Invalid budget ID
           schema:
             type: string
-        "400":
-          description: Invalid exercise ID
+        "404":
+          description: Budget not found
           schema:
             type: string
         "500":
@@ -478,9 +529,873 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Add to Vocabulary
+      summary: Get Budget
       tags:
-      - Vocabulary
+      - Budget
+    put:
+      consumes:
+      - application/json
+      description: Update budget details
+      parameters:
+      - description: Budget ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Budget update request
+        in: body
+        name: budget
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.BudgetUReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Budget updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Budget not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Budget
+      tags:
+      - Budget
+  /v1/budgets:
+    get:
+      consumes:
+      - application/json
+      description: List all budgets with filtering and pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Minimum amount
+        in: query
+        name: amount_from
+        type: number
+      - description: Maximum amount
+        in: query
+        name: amount_to
+        type: number
+      - description: Budget period
+        in: query
+        name: period
+        type: string
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of budgets
+          schema:
+            $ref: '#/definitions/genprotos.BudgetGARes'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Budgets
+      tags:
+      - Budget
+  /v1/categories:
+    get:
+      consumes:
+      - application/json
+      description: List all categories with pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of categories
+          schema:
+            $ref: '#/definitions/genprotos.CategoryGARes'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Categories
+      tags:
+      - Category
+  /v1/category:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new category
+      parameters:
+      - description: Category creation request
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.CategoryCReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Category
+      tags:
+      - Category
+  /v1/category/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Category deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid category ID
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Category
+      tags:
+      - Category
+    get:
+      consumes:
+      - application/json
+      description: Get category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category details
+          schema:
+            $ref: '#/definitions/genprotos.CategoryGRes'
+        "400":
+          description: Invalid category ID
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Category
+      tags:
+      - Category
+    put:
+      consumes:
+      - application/json
+      description: Update category details
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category update request
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.CategoryUReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Category
+      tags:
+      - Category
+  /v1/goal:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new goal
+      parameters:
+      - description: Goal creation request
+        in: body
+        name: goal
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.GoalCReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Goal created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Goal
+      tags:
+      - Goal
+  /v1/goal/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete goal by ID
+      parameters:
+      - description: Goal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Goal deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid goal ID
+          schema:
+            type: string
+        "404":
+          description: Goal not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Goal
+      tags:
+      - Goal
+    get:
+      consumes:
+      - application/json
+      description: Get goal by ID
+      parameters:
+      - description: Goal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Goal details
+          schema:
+            $ref: '#/definitions/genprotos.GoalGRes'
+        "400":
+          description: Invalid goal ID
+          schema:
+            type: string
+        "404":
+          description: Goal not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Goal
+      tags:
+      - Goal
+    put:
+      consumes:
+      - application/json
+      description: Update goal details
+      parameters:
+      - description: Goal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Goal update request
+        in: body
+        name: goal
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.GoalUReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Goal updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Goal not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Goal
+      tags:
+      - Goal
+  /v1/goal/{id}/current_amount:
+    put:
+      consumes:
+      - application/json
+      description: Update the current amount of a goal
+      parameters:
+      - description: Goal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Goal current amount update request
+        in: body
+        name: amount
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.GoalCurrentAmountUReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Goal current amount updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Goal not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Goal Current Amount
+      tags:
+      - Goal
+  /v1/goals:
+    get:
+      consumes:
+      - application/json
+      description: List all goals with filtering and pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Goal status
+        in: query
+        name: status
+        type: string
+      - description: Minimum target amount
+        in: query
+        name: target_from
+        type: number
+      - description: Maximum target amount
+        in: query
+        name: target_to
+        type: number
+      - description: Deadline from (YYYY-MM-DD)
+        in: query
+        name: deadline_from
+        type: string
+      - description: Deadline to (YYYY-MM-DD)
+        in: query
+        name: deadline_to
+        type: string
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of goals
+          schema:
+            $ref: '#/definitions/genprotos.GoalGARes'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Goals
+      tags:
+      - Goal
+  /v1/report/budget-performance:
+    get:
+      consumes:
+      - application/json
+      description: Get a report of budget performance with filtering
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Budget period
+        in: query
+        name: period
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: start_date
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Budget performance report
+          schema:
+            $ref: '#/definitions/genprotos.BudgetPerGet'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Budget Performance Report
+      tags:
+      - Report
+  /v1/report/goal-progress:
+    get:
+      consumes:
+      - application/json
+      description: Get a report of goal progress with filtering
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Goal status
+        in: query
+        name: status
+        type: string
+      - description: Deadline from (YYYY-MM-DD)
+        in: query
+        name: deadline_from
+        type: string
+      - description: Deadline to (YYYY-MM-DD)
+        in: query
+        name: deadline_to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Goal progress report
+          schema:
+            $ref: '#/definitions/genprotos.GoalProgresGet'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Goal Progress Report
+      tags:
+      - Report
+  /v1/report/incomes:
+    get:
+      consumes:
+      - application/json
+      description: Get a report of incomes with filtering and pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: date_from
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: date_to
+        type: string
+      - description: Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Income report
+          schema:
+            $ref: '#/definitions/genprotos.IncomeGRes'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Incomes Report
+      tags:
+      - Report
+  /v1/report/spendings:
+    get:
+      consumes:
+      - application/json
+      description: Get a report of spendings with filtering and pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: date_from
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: date_to
+        type: string
+      - description: Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Spending report
+          schema:
+            $ref: '#/definitions/genprotos.SpendingGRes'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Spendings Report
+      tags:
+      - Report
+  /v1/transaction:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new transaction
+      parameters:
+      - description: Transaction creation request
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.TransactionCReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Transaction
+      tags:
+      - Transaction
+  /v1/transaction/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete transaction by ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Transaction deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid transaction ID
+          schema:
+            type: string
+        "404":
+          description: Transaction not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Transaction
+      tags:
+      - Transaction
+    get:
+      consumes:
+      - application/json
+      description: Get transaction by ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction details
+          schema:
+            $ref: '#/definitions/genprotos.TransactionGRes'
+        "400":
+          description: Invalid transaction ID
+          schema:
+            type: string
+        "404":
+          description: Transaction not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Transaction
+      tags:
+      - Transaction
+  /v1/transactions:
+    get:
+      consumes:
+      - application/json
+      description: List all transactions with filtering and pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Account ID
+        in: query
+        name: account_id
+        type: string
+      - description: Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Amount
+        in: query
+        name: amount
+        type: number
+      - description: Transaction type
+        in: query
+        name: type
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: date_from
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: date_to
+        type: string
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of transactions
+          schema:
+            $ref: '#/definitions/genprotos.TransactionGARes'
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Transactions
+      tags:
+      - Transaction
 securityDefinitions:
   BearerAuth:
     in: header

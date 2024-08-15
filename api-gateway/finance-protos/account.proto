@@ -28,7 +28,11 @@ message AccountBalanceGRes {
 
 message AccountBalanceUReq {
     string user_id = 1;
-    string balance = 2;
+    float balance = 2;
+}
+
+message AccountBalanceUReqForSwagger {
+    float balance = 1;
 }
 
 message AccountUReq {

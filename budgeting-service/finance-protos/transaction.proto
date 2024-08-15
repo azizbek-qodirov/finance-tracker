@@ -9,6 +9,7 @@ import "finance-protos/void.proto";
 service TransactionService {
     rpc Create(TransactionCReq) returns (Void);
     rpc GetByID(ByID) returns (TransactionGRes);
+    rpc Delete(ByID) returns (Void);
     rpc GetAll(TransactionGAReq) returns (TransactionGARes);
 }
 
@@ -19,17 +20,25 @@ message TransactionCReq {
     float amount = 4;
     string type = 5;
     string description = 6;
-    string created_datetime = 7;
 }
 
-message TransactionGRes {
-    string user_id = 1;
+message TransactionCReqForSwagger {
     string account_id = 2;
     string category_id = 3;
     float amount = 4;
     string type = 5;
     string description = 6;
-    string created_datetime = 7;
+}
+
+message TransactionGRes {
+    string id = 1;
+    string user_id = 2;
+    string account_id = 3;
+    string category_id = 4;
+    float amount = 5;
+    string type = 6;
+    string description = 7;
+    string created_datetime = 8;
 }
 
 message TransactionGAReq {

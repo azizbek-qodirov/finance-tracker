@@ -31,15 +31,13 @@ func NewReportManager(client *mongo.Client, dbName, transactionCollectionName, b
 }
 
 func (m *ReportManager) GetSpendings(req *pb.SpendingGReq) (*pb.SpendingGRes, error) {
-	filter := m.buildTransactionFilter(req.UserId, req.CategoryId, "expense", req.DateFrom, req.DateTo)
+	filter := m.buildTransactionFilter(req.UserId, req.CategoryId, "payment", req.DateFrom, req.DateTo) // Use "payment" type
 
-	// Calculate total spending amount
 	totalAmount, err := m.calculateTotalAmount(filter)
 	if err != nil {
 		return nil, fmt.Errorf("failed to calculate total spending amount: %v", err)
 	}
 
-	// Get transactions (with pagination if needed)
 	transactions, err := m.getTransactions(filter, req.Pagination)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get spending transactions: %v", err)
@@ -53,7 +51,7 @@ func (m *ReportManager) GetSpendings(req *pb.SpendingGReq) (*pb.SpendingGRes, er
 }
 
 func (m *ReportManager) GetIncomes(req *pb.IncomeGReq) (*pb.IncomeGRes, error) {
-	filter := m.buildTransactionFilter(req.UserId, req.CategoryId, "income", req.DateFrom, req.DateTo)
+	filter := m.buildTransactionFilter(req.UserId, req.CategoryId, "income", req.DateFrom, req.DateTo) // Use "income" type
 
 	// Calculate total income amount
 	totalAmount, err := m.calculateTotalAmount(filter)
@@ -108,7 +106,7 @@ func (m *ReportManager) BudgetPerformance(req *pb.BudgetPerReq) (*pb.BudgetPerGe
 		transactionFilter := m.buildTransactionFilter(
 			req.UserId,
 			budget.CategoryID,
-			"expense",
+			"payment",
 			budget.StartDate.Format("2006-01-02"),
 			budget.EndDate.Format("2006-01-02"),
 		)
