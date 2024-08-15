@@ -10,11 +10,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type ReportManager struct {
 	transactionCollection *mongo.Collection
+	transactionManager    *TransactionManager
 	budgetCollection      *mongo.Collection
 	goalCollection        *mongo.Collection
 }
@@ -24,64 +24,84 @@ func NewReportManager(client *mongo.Client, dbName, transactionCollectionName, b
 	budgetCollection := client.Database(dbName).Collection(budgetCollectionName)
 	goalCollection := client.Database(dbName).Collection(goalCollectionName)
 	return &ReportManager{
-		transactionCollection: transactionCollection,
+		transactionManager:    NewTransactionManager(client, dbName, transactionCollectionName),
 		budgetCollection:      budgetCollection,
 		goalCollection:        goalCollection,
+		transactionCollection: transactionCollection,
 	}
 }
 
 func (m *ReportManager) GetSpendings(req *pb.SpendingGReq) (*pb.SpendingGRes, error) {
-	filter := m.buildTransactionFilter(req.UserId, req.CategoryId, "payment", req.DateFrom, req.DateTo) // Use "payment" type
-
-	totalAmount, err := m.calculateTotalAmount(filter)
-	if err != nil {
-		return nil, fmt.Errorf("failed to calculate total spending amount: %v", err)
+	// Build the filter for transactions
+	transactionReq := &pb.TransactionGAReq{
+		UserId:     req.UserId,
+		CategoryId: req.CategoryId,
+		Type:       "payment", // Filter by "payment" type
+		DateFrom:   req.DateFrom,
+		DateTo:     req.DateTo,
+		Pagination: req.Pagination,
 	}
 
-	transactions, err := m.getTransactions(filter, req.Pagination)
+	// Get transactions using TransactionManager
+	transactionRes, err := m.transactionManager.GetAll(transactionReq)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get spending transactions: %v", err)
+	}
+
+	// Calculate total spending amount
+	totalAmount := float64(0)
+	for _, transaction := range transactionRes.Transactions {
+		totalAmount += float64(transaction.Amount)
 	}
 
 	return &pb.SpendingGRes{
 		Request:      req,
 		TotalAmount:  float32(totalAmount),
-		Transactions: transactions,
+		Transactions: transactionRes.Transactions,
 	}, nil
 }
 
 func (m *ReportManager) GetIncomes(req *pb.IncomeGReq) (*pb.IncomeGRes, error) {
-	filter := m.buildTransactionFilter(req.UserId, req.CategoryId, "income", req.DateFrom, req.DateTo) // Use "income" type
-
-	// Calculate total income amount
-	totalAmount, err := m.calculateTotalAmount(filter)
-	if err != nil {
-		return nil, fmt.Errorf("failed to calculate total income amount: %v", err)
+	// Build the filter for transactions
+	transactionReq := &pb.TransactionGAReq{
+		UserId:     req.UserId,
+		CategoryId: req.CategoryId,
+		Type:       "income", // Filter by "income" type
+		DateFrom:   req.DateFrom,
+		DateTo:     req.DateTo,
+		Pagination: req.Pagination,
 	}
 
-	// Get transactions (with pagination if needed)
-	transactions, err := m.getTransactions(filter, req.Pagination)
+	// Get transactions using TransactionManager
+	transactionRes, err := m.transactionManager.GetAll(transactionReq)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get income transactions: %v", err)
+	}
+
+	// Calculate total income amount
+	totalAmount := float64(0)
+	for _, transaction := range transactionRes.Transactions {
+		totalAmount += float64(transaction.Amount)
 	}
 
 	return &pb.IncomeGRes{
 		Request:      req,
 		TotalAmount:  float32(totalAmount),
-		Transactions: transactions,
+		Transactions: transactionRes.Transactions,
 	}, nil
 }
-
 func (m *ReportManager) BudgetPerformance(req *pb.BudgetPerReq) (*pb.BudgetPerGet, error) {
-	budgetFilter := bson.M{"user_id": req.UserId}
+	// Build the filter for budgets
+	filter := bson.M{"user_id": req.UserId}
 	if req.CategoryId != "" {
-		budgetFilter["category_id"] = req.CategoryId
+		filter["category_id"] = req.CategoryId
 	}
 	if req.Period != "" {
-		budgetFilter["period"] = req.Period
+		filter["period"] = req.Period
 	}
 
-	budgetCursor, err := m.budgetCollection.Find(context.Background(), budgetFilter)
+	// Find matching budgets
+	budgetCursor, err := m.budgetCollection.Find(context.Background(), filter)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get budgets: %v", err)
 	}
@@ -103,19 +123,39 @@ func (m *ReportManager) BudgetPerformance(req *pb.BudgetPerReq) (*pb.BudgetPerGe
 			return nil, fmt.Errorf("failed to decode budget: %v", err)
 		}
 
-		transactionFilter := m.buildTransactionFilter(
-			req.UserId,
-			budget.CategoryID,
-			"payment",
-			budget.StartDate.Format("2006-01-02"),
-			budget.EndDate.Format("2006-01-02"),
-		)
-
-		totalSpendings, err := m.calculateTotalAmount(transactionFilter)
-		if err != nil {
-			return nil, fmt.Errorf("failed to calculate total spending amount: %v", err)
+		// Build the filter for transactions within the budget period
+		transactionFilter := bson.M{
+			"user_id":          req.UserId,
+			"category_id":      budget.CategoryID,
+			"type":             "payment",
+			"created_datetime": bson.M{"$gte": budget.StartDate, "$lte": budget.EndDate},
 		}
 
+		// Calculate total spendings for the budget period using aggregation
+		pipeline := []bson.M{
+			{"$match": transactionFilter},
+			{"$group": bson.M{
+				"_id":            nil,
+				"totalSpendings": bson.M{"$sum": "$amount"},
+			}},
+		}
+		cursor, err := m.transactionCollection.Aggregate(context.Background(), pipeline)
+		if err != nil {
+			return nil, fmt.Errorf("failed to aggregate transactions: %v", err)
+		}
+		defer cursor.Close(context.Background())
+		var result []bson.M
+		if err := cursor.All(context.Background(), &result); err != nil {
+			return nil, fmt.Errorf("failed to decode aggregation result: %v", err)
+		}
+		var totalSpendings float64
+		if len(result) > 0 {
+			if val, ok := result[0]["totalSpendings"].(float64); ok {
+				totalSpendings = val
+			}
+		}
+
+		// Calculate progress
 		progress := float64(0)
 		if budget.Amount > 0 {
 			progress = totalSpendings / budget.Amount
@@ -140,12 +180,11 @@ func (m *ReportManager) BudgetPerformance(req *pb.BudgetPerReq) (*pb.BudgetPerGe
 }
 
 func (m *ReportManager) GoalProgress(req *pb.GoalProgresReq) (*pb.GoalProgresGet, error) {
+	// Build the filter for goals
 	filter := bson.M{"user_id": req.UserId}
 	if req.Status != "" {
 		filter["status"] = req.Status
 	}
-
-	// Date Range Filtering (adjust date format if needed)
 	if req.DeadlineFrom != "" {
 		deadlineFrom, err := time.Parse("2006-01-02", req.DeadlineFrom)
 		if err != nil {
@@ -167,6 +206,7 @@ func (m *ReportManager) GoalProgress(req *pb.GoalProgresReq) (*pb.GoalProgresGet
 		filter["deadline"].(bson.M)["$lte"] = deadlineTo
 	}
 
+	// Find matching goals
 	cursor, err := m.goalCollection.Find(context.Background(), filter)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get goals: %v", err)
@@ -179,13 +219,14 @@ func (m *ReportManager) GoalProgress(req *pb.GoalProgresReq) (*pb.GoalProgresGet
 			Deadline      time.Time `bson:"deadline"`
 			TargetAmount  float64   `bson:"target_amount"`
 			CurrentAmount float64   `bson:"current_amount"`
-			GoalName      string    `bson:"name"` // Assuming "goal_name" maps to "name" in MongoDB
+			GoalName      string    `bson:"name"`
 		}
 		err := cursor.Decode(&goal)
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode goal: %v", err)
 		}
 
+		// Calculate progress
 		progress := float64(0)
 		if goal.TargetAmount > 0 {
 			progress = goal.CurrentAmount / goal.TargetAmount
@@ -205,94 +246,4 @@ func (m *ReportManager) GoalProgress(req *pb.GoalProgresReq) (*pb.GoalProgresGet
 	}
 
 	return &pb.GoalProgresGet{Goals: goalProgresses}, nil
-}
-
-func (m *ReportManager) buildTransactionFilter(userID, categoryID, transactionType, dateFrom, dateTo string) bson.M {
-	filter := bson.M{"user_id": userID}
-	if categoryID != "" {
-		filter["category_id"] = categoryID
-	}
-	if transactionType != "" {
-		filter["type"] = transactionType
-	}
-
-	if dateFrom != "" {
-		dateFromTime, _ := time.Parse("2006-01-02", dateFrom)
-		if filter["created_datetime"] == nil {
-			filter["created_datetime"] = bson.M{}
-		}
-		filter["created_datetime"].(bson.M)["$gte"] = dateFromTime
-	}
-	if dateTo != "" {
-		dateToTime, _ := time.Parse("2006-01-02", dateTo)
-		if filter["created_datetime"] == nil {
-			filter["created_datetime"] = bson.M{}
-		}
-		filter["created_datetime"].(bson.M)["$lte"] = dateToTime
-	}
-
-	return filter
-}
-
-func (m *ReportManager) calculateTotalAmount(filter bson.M) (float64, error) {
-	pipeline := []bson.M{
-		{"$match": filter},
-		{"$group": bson.M{
-			"_id":         nil,
-			"totalAmount": bson.M{"$sum": "$amount"},
-		}},
-	}
-
-	cursor, err := m.transactionCollection.Aggregate(context.Background(), pipeline)
-	if err != nil {
-		return 0, fmt.Errorf("failed to aggregate transactions: %v", err)
-	}
-	defer cursor.Close(context.Background())
-
-	var result []bson.M
-	if err := cursor.All(context.Background(), &result); err != nil {
-		return 0, fmt.Errorf("failed to decode aggregation result: %v", err)
-	}
-
-	if len(result) > 0 {
-		if totalAmount, ok := result[0]["totalAmount"].(float64); ok {
-			return totalAmount, nil
-		}
-	}
-
-	return 0, nil
-}
-
-func (m *ReportManager) getTransactions(filter bson.M, pagination *pb.Pagination) ([]*pb.TransactionGARes, error) {
-	opts := options.Find()
-	if pagination != nil {
-		if pagination.Limit > 0 {
-			opts.SetLimit(pagination.Limit)
-		}
-		if pagination.Offset > 0 {
-			opts.SetSkip(pagination.Offset)
-		}
-	}
-
-	cursor, err := m.transactionCollection.Find(context.Background(), filter, opts)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get transactions: %v", err)
-	}
-	defer cursor.Close(context.Background())
-
-	var transactions []*pb.TransactionGARes
-	for cursor.Next(context.Background()) {
-		var transaction pb.TransactionGARes
-		err := cursor.Decode(&transaction)
-		if err != nil {
-			return nil, fmt.Errorf("failed to decode transaction: %v", err)
-		}
-		transactions = append(transactions, &transaction)
-	}
-
-	if err := cursor.Err(); err != nil {
-		return nil, fmt.Errorf("transaction cursor error: %v", err)
-	}
-
-	return transactions, nil
 }

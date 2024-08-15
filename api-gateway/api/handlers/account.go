@@ -1,9 +1,13 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
+	"gateway-service/config"
 	pb "gateway-service/genprotos"
+
+	kfk "gateway-service/kafka"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -84,11 +88,13 @@ func (h *HTTPHandler) UpdateAccount(c *gin.Context) {
 		return
 	}
 
-	_, err := h.Account.UpdateAccount(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "account-updates"
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaTopic+":"+req.Id, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Account updated successfully"})
 }
@@ -121,11 +127,13 @@ func (h *HTTPHandler) UpdateBalance(c *gin.Context) {
 		Balance: body.Balance,
 	}
 
-	_, err := h.Account.UpdateBalance(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "account-balance-updates"
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaTopic+":"+user_id, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Account balance updated successfully"})
 }

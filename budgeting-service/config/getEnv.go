@@ -20,6 +20,8 @@ type Config struct {
 	MONGO_GOALS_COLLECTION_NAME        string
 	MONGO_REPORTS_COLLECTION_NAME      string
 	MONGO_BUDGETS_COLLECTION_NAME      string
+
+	KAFKA_BROKER string
 }
 
 func Load() Config {
@@ -40,6 +42,8 @@ func Load() Config {
 	config.MONGO_GOALS_COLLECTION_NAME = cast.ToString(coalesce("MONGO_GOALS_COLLECTION_NAME", "goals"))
 	config.MONGO_REPORTS_COLLECTION_NAME = cast.ToString(coalesce("MONGO_REPORTS_COLLECTION_NAME", "reports"))
 	config.MONGO_BUDGETS_COLLECTION_NAME = cast.ToString(coalesce("MONGO_BUDGETS_COLLECTION_NAME", "budgets"))
+
+	config.KAFKA_BROKER = cast.ToString(coalesce("KAFKA_BROKER", "localhost:9092"))
 
 	return config
 }

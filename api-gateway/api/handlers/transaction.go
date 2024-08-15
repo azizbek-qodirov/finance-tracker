@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"gateway-service/config"
 	pb "gateway-service/genprotos"
+	kfk "gateway-service/kafka"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -40,11 +43,14 @@ func (h *HTTPHandler) CreateTransaction(c *gin.Context) {
 		Description: body.Description,
 	}
 
-	_, err := h.Transaction.Create(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "transaction-create"
+		kafkaKey := "transaction-create-" + req.UserId
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Transaction created successfully"})
 }
@@ -90,11 +96,14 @@ func (h *HTTPHandler) GetTransaction(c *gin.Context) {
 func (h *HTTPHandler) DeleteTransaction(c *gin.Context) {
 	transactionId := c.Param("id")
 
-	_, err := h.Transaction.Delete(c, &pb.ByID{Id: transactionId})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "transaction-delete"
+		kafkaKey := "transaction-delete-" + transactionId
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &pb.ByID{Id: transactionId}, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Transaction deleted successfully"})
 }

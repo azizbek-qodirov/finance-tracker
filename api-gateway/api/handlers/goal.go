@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"gateway-service/config"
 	pb "gateway-service/genprotos" // Update with your actual package path
+	kfk "gateway-service/kafka"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -39,13 +42,17 @@ func (h *HTTPHandler) CreateGoal(c *gin.Context) {
 		Deadline:     body.Deadline,
 	}
 
-	_, err := h.Goal.Create(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "goal-create"
+		kafkaKey := "goal-create-" + req.UserId
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
-	c.JSON(http.StatusOK, gin.H{"message": "Goal created successfully"})
+	// Respond immediately without waiting for gRPC call
+	c.JSON(http.StatusOK, gin.H{"message": "Goal creation request submitted"})
 }
 
 // GetGoal godoc
@@ -103,13 +110,16 @@ func (h *HTTPHandler) UpdateGoal(c *gin.Context) {
 		TargetAmount: body.TargetAmount,
 	}
 
-	_, err := h.Goal.Update(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "goal-update"
+		kafkaKey := "goal-update-" + req.Id
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
-	c.JSON(http.StatusOK, gin.H{"message": "Goal updated successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Goal update request submitted"})
 }
 
 // UpdateGoalCurrentAmount godoc
@@ -162,13 +172,16 @@ func (h *HTTPHandler) UpdateGoalCurrentAmount(c *gin.Context) {
 func (h *HTTPHandler) DeleteGoal(c *gin.Context) {
 	goalId := c.Param("id")
 
-	_, err := h.Goal.Delete(c, &pb.ByID{Id: goalId})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "goal-delete"
+		kafkaKey := "goal-delete-" + goalId
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &pb.ByID{Id: goalId}, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
-	c.JSON(http.StatusOK, gin.H{"message": "Goal deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Goal deletion request submitted"})
 }
 
 // GetAllGoals godoc

@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"gateway-service/config"
 	pb "gateway-service/genprotos" // Update with your actual package path
+	kfk "gateway-service/kafka"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -37,11 +40,14 @@ func (h *HTTPHandler) CreateCategory(c *gin.Context) {
 		Type:   body.Type,
 	}
 
-	_, err := h.Category.Create(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "category-create"
+		kafkaKey := "category-create-" + req.UserId + "-" + req.Name // Example key
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Category created successfully"})
 }
@@ -98,11 +104,14 @@ func (h *HTTPHandler) UpdateCategory(c *gin.Context) {
 		Name: body.Name,
 	}
 
-	_, err := h.Category.Update(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "category-update"
+		kafkaKey := "category-update-" + req.Id // Example key
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Category updated successfully"})
 }
@@ -123,11 +132,14 @@ func (h *HTTPHandler) UpdateCategory(c *gin.Context) {
 func (h *HTTPHandler) DeleteCategory(c *gin.Context) {
 	categoryId := c.Param("id")
 
-	_, err := h.Category.Delete(c, &pb.ByID{Id: categoryId})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "category-delete"
+		kafkaKey := "category-delete-" + categoryId
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaKey, &pb.ByID{Id: categoryId}, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Category deleted successfully"})
 }

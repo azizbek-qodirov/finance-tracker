@@ -24,7 +24,7 @@ message SpendingGReq {
 message SpendingGRes {
     SpendingGReq request = 1;
     float total_amount = 2;
-    repeated TransactionGARes transactions = 3;
+    repeated TransactionGRes transactions = 3;
 }
 
 message IncomeGReq {
@@ -38,7 +38,7 @@ message IncomeGReq {
 message IncomeGRes {
     IncomeGReq request = 1;
     float total_amount = 2;
-    repeated TransactionGARes transactions = 4;
+    repeated TransactionGRes transactions = 4;
 }
 message BudgetPerReq {
     string user_id = 1;

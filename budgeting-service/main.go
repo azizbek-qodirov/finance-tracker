@@ -5,13 +5,9 @@ import (
 	"net"
 
 	cf "budget-service/config"
+	kfk "budget-service/kafka"
+	"budget-service/service"
 	"budget-service/storage"
-
-	service "budget-service/service"
-
-	pb "budget-service/genprotos"
-
-	"google.golang.org/grpc"
 )
 
 func main() {
@@ -27,20 +23,8 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	accountService := service.NewAccountService(db)
-	budgetService := service.NewBudgetService(db)
-	categoryService := service.NewCategoryService(db)
-	goalService := service.NewGoalService(db)
-	reportService := service.NewReportService(db)
-	transactionService := service.NewTransactionService(db)
-
-	s := grpc.NewServer()
-	pb.RegisterAccountServiceServer(s, accountService)
-	pb.RegisterBudgetServiceServer(s, budgetService)
-	pb.RegisterCategoryServiceServer(s, categoryService)
-	pb.RegisterGoalServiceServer(s, goalService)
-	pb.RegisterReportServiceServer(s, reportService)
-	pb.RegisterTransactionServiceServer(s, transactionService)
+	kfk.InitKafka(&config, db)
+	s := service.InitServer(db)
 
 	log.Printf("server listening at %v", listener.Addr())
 	if err := s.Serve(listener); err != nil {

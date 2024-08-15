@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"gateway-service/config"
 	pb "gateway-service/genprotos" // Update with your actual package path
+	kfk "gateway-service/kafka"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -40,11 +43,13 @@ func (h *HTTPHandler) CreateBudget(c *gin.Context) {
 		EndDate:    body.EndDate,
 	}
 
-	_, err := h.Budget.Create(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "budget-create"
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaTopic+":"+user_id, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Budget created successfully"})
 }
@@ -104,11 +109,13 @@ func (h *HTTPHandler) UpdateBudget(c *gin.Context) {
 		EndDate:   body.EndDate,
 	}
 
-	_, err := h.Budget.Update(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "budget-update"
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaTopic+":"+budgetId, &req, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Budget updated successfully"})
 }
@@ -129,11 +136,13 @@ func (h *HTTPHandler) UpdateBudget(c *gin.Context) {
 func (h *HTTPHandler) DeleteBudget(c *gin.Context) {
 	budgetId := c.Param("id")
 
-	_, err := h.Budget.Delete(c, &pb.ByID{Id: budgetId})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	go func() {
+		kafkaTopic := "budget-delete"
+		err := kfk.ProduceKafkaMessage(kafkaTopic, kafkaTopic+":"+budgetId, &pb.ByID{Id: budgetId}, config.Load().KAFKA_BROKER)
+		if err != nil {
+			fmt.Println("Error producing Kafka message:", err)
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Budget deleted successfully"})
 }
