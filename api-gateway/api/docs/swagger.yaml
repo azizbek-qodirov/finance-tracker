@@ -210,7 +210,7 @@ definitions:
         type: number
       transactions:
         items:
-          $ref: '#/definitions/genprotos.TransactionGARes'
+          $ref: '#/definitions/genprotos.TransactionGRes'
         type: array
     type: object
   genprotos.Pagination:
@@ -258,7 +258,7 @@ definitions:
         type: number
       transactions:
         items:
-          $ref: '#/definitions/genprotos.TransactionGARes'
+          $ref: '#/definitions/genprotos.TransactionGRes'
         type: array
     type: object
   genprotos.TransactionCReqForSwagger:

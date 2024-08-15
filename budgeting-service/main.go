@@ -23,8 +23,8 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	kfk.InitKafka(&config, db)
 	s := service.InitServer(db)
+	kfk.InitKafka(&config, db)
 
 	log.Printf("server listening at %v", listener.Addr())
 	if err := s.Serve(listener); err != nil {

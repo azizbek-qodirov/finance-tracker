@@ -2056,7 +2056,7 @@ const docTemplate = `{
                 "transactions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.TransactionGARes"
+                        "$ref": "#/definitions/genprotos.TransactionGRes"
                     }
                 }
             }
@@ -2130,7 +2130,7 @@ const docTemplate = `{
                 "transactions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.TransactionGARes"
+                        "$ref": "#/definitions/genprotos.TransactionGRes"
                     }
                 }
             }

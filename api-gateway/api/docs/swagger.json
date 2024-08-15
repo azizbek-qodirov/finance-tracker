@@ -2045,7 +2045,7 @@
                 "transactions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.TransactionGARes"
+                        "$ref": "#/definitions/genprotos.TransactionGRes"
                     }
                 }
             }
@@ -2119,7 +2119,7 @@
                 "transactions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.TransactionGARes"
+                        "$ref": "#/definitions/genprotos.TransactionGRes"
                     }
                 }
             }

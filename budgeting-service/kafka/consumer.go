@@ -2,72 +2,73 @@ package kfk
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
-
-	"budget-service/storage"
+	"sync"
 
 	"github.com/segmentio/kafka-go"
 )
 
-type KafkaConsumer struct {
-	Reader  *kafka.Reader
-	Storage storage.StorageI
+type KafkaConsumerManager struct {
+	consumers map[string]*kafka.Reader
+	handlers  map[string]func(message []byte)
+	mu        sync.Mutex
 }
 
-func NewKafkaConsumer(kafkaBroker, topic, groupID string, storage storage.StorageI) *KafkaConsumer {
-	reader := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  []string{kafkaBroker},
-		Topic:    topic,
-		GroupID:  groupID,
-		MinBytes: 10e3, // 10KB
-		MaxBytes: 10e6, // 10MB
-	})
-	return &KafkaConsumer{Reader: reader, Storage: storage}
-}
-
-func (kc *KafkaConsumer) ConsumeMessages(ctx context.Context) {
-	for {
-		m, err := kc.Reader.ReadMessage(ctx)
-		if err != nil {
-			log.Printf("Error reading Kafka message: %v", err)
-			break
-		}
-
-		fmt.Printf("Message at topic/partition/offset %v/%v/%v: %s = %s\n",
-			m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
-
-		switch m.Topic {
-		case "account-updates":
-			kc.handleAccountUpdate(m.Value)
-		case "account-balance-updates":
-			kc.handleAccountBalanceUpdate(m.Value)
-		case "budget-create":
-			kc.handleBudgetCreate(m.Value)
-		case "budget-update":
-			kc.handleBudgetUpdate(m.Value)
-		case "budget-delete":
-			kc.handleBudgetDelete(m.Value)
-		case "category-create":
-			kc.handleCategoryCreate(m.Value)
-		case "category-update":
-			kc.handleCategoryUpdate(m.Value)
-		case "category-delete":
-		case "goal-create":
-			kc.handleGoalCreate(m.Value)
-		case "goal-update":
-			kc.handleGoalUpdate(m.Value)
-		case "goal-delete":
-			kc.handleGoalDelete(m.Value)
-			kc.handleCategoryDelete(m.Value)
-		case "transaction-create":
-			kc.handleTransactionCreate(m.Value)
-		case "transaction-delete":
-			kc.handleTransactionDelete(m.Value)
-		}
+func NewKafkaConsumerManager() *KafkaConsumerManager {
+	return &KafkaConsumerManager{
+		consumers: make(map[string]*kafka.Reader),
+		handlers:  make(map[string]func(message []byte)),
 	}
 }
 
-func (kc *KafkaConsumer) Close() error {
-	return kc.Reader.Close()
+var ErrConsumerAlreadyExists = errors.New("consumer for this topic already exists")
+
+func (kcm *KafkaConsumerManager) RegisterConsumer(brokers []string, topic, groupID string, handler func(message []byte)) error {
+	kcm.mu.Lock()
+	defer kcm.mu.Unlock()
+
+	if _, exists := kcm.consumers[topic]; exists {
+		return ErrConsumerAlreadyExists
+	}
+
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers: brokers,
+		Topic:   topic,
+		GroupID: groupID,
+	})
+	kcm.consumers[topic] = reader
+	kcm.handlers[topic] = handler
+
+	go kcm.consumeMessages(topic)
+
+	return nil
+}
+
+func (kcm *KafkaConsumerManager) consumeMessages(topic string) {
+	reader := kcm.consumers[topic]
+	handler := kcm.handlers[topic]
+
+	for {
+		fmt.Printf("Listening for a message in topic %s...\n", topic)
+		msg, err := reader.ReadMessage(context.Background())
+		if err != nil {
+			log.Printf("Error reading message from topic %s: %v", topic, err)
+			continue
+		}
+		handler(msg.Value)
+	}
+}
+
+func (kcm *KafkaConsumerManager) Close() error {
+	kcm.mu.Lock()
+	defer kcm.mu.Unlock()
+
+	for _, reader := range kcm.consumers {
+		if err := reader.Close(); err != nil {
+			return err
+		}
+	}
+	return nil
 }

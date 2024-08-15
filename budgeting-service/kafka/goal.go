@@ -2,48 +2,52 @@ package kfk
 
 import (
 	pb "budget-service/genprotos"
+	"budget-service/storage"
 	"encoding/json"
 	"log"
 )
 
-func (kc *KafkaConsumer) handleGoalCreate(message []byte) {
-	var req pb.GoalCReq
-	err := json.Unmarshal(message, &req)
-	if err != nil {
-		log.Printf("Error unmarshalling goal create message: %v", err)
-		return
-	}
+func GoalCreateHandler(db *storage.Storage) func(message []byte) {
+	return func(message []byte) {
+		var req pb.GoalCReq
+		if err := json.Unmarshal(message, &req); err != nil {
+			log.Printf("Failed to unmarshal goal create: %v", err)
+			return
+		}
 
-	_, err = kc.Storage.Goal().Create(&req)
-	if err != nil {
-		log.Printf("Error creating goal from Kafka message: %v", err)
-	}
-}
-
-func (kc *KafkaConsumer) handleGoalUpdate(message []byte) {
-	var req pb.GoalUReq
-	err := json.Unmarshal(message, &req)
-	if err != nil {
-		log.Printf("Error unmarshalling goal update message: %v", err)
-		return
-	}
-
-	_, err = kc.Storage.Goal().Update(&req)
-	if err != nil {
-		log.Printf("Error updating goal from Kafka message: %v", err)
+		_, err := db.Goal().Create(&req)
+		if err != nil {
+			log.Printf("Error creating goal from Kafka message: %v", err)
+		}
 	}
 }
 
-func (kc *KafkaConsumer) handleGoalDelete(message []byte) {
-	var req pb.ByID
-	err := json.Unmarshal(message, &req)
-	if err != nil {
-		log.Printf("Error unmarshalling goal delete message: %v", err)
-		return
-	}
+func GoalUpdateHandler(db *storage.Storage) func(message []byte) {
+	return func(message []byte) {
+		var req pb.GoalUReq
+		if err := json.Unmarshal(message, &req); err != nil {
+			log.Printf("Failed to unmarshal goal update: %v", err)
+			return
+		}
 
-	_, err = kc.Storage.Goal().Delete(&req)
-	if err != nil {
-		log.Printf("Error deleting goal from Kafka message: %v", err)
+		_, err := db.Goal().Update(&req)
+		if err != nil {
+			log.Printf("Error updating goal from Kafka message: %v", err)
+		}
+	}
+}
+
+func GoalDeleteHandler(db *storage.Storage) func(message []byte) {
+	return func(message []byte) {
+		var req pb.ByID
+		if err := json.Unmarshal(message, &req); err != nil {
+			log.Printf("Failed to unmarshal goal delete: %v", err)
+			return
+		}
+
+		_, err := db.Goal().Delete(&req)
+		if err != nil {
+			log.Printf("Error deleting goal from Kafka message: %v", err)
+		}
 	}
 }
