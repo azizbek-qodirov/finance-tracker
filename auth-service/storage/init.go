@@ -13,6 +13,7 @@ import (
 
 func ConnectDB(cf *config.Config) (*sql.DB, *mongo.Client, error) {
 	dbConn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", cf.DB_USER, cf.DB_PASSWORD, cf.DB_HOST, cf.DB_PORT, cf.DB_NAME)
+	fmt.Println(dbConn)
 	db, err := sql.Open("postgres", dbConn)
 	if err != nil {
 		return nil, nil, err
