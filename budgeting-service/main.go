@@ -14,7 +14,7 @@ func main() {
 	config := cf.Load()
 	em := cf.NewErrorManager()
 
-	db, err := storage.NewDatabaseStorage(config)
+	db, rclient, err := storage.NewDatabaseStorage(config)
 	em.CheckErr(err)
 	defer db.Close()
 
@@ -23,7 +23,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	s := service.InitServer(db)
+	s := service.InitServer(db, rclient)
 	kfk.InitKafka(&config, db)
 
 	log.Printf("server listening at %v", listener.Addr())

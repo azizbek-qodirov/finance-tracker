@@ -5,11 +5,12 @@ import (
 
 	pb "budget-service/genprotos"
 
+	"github.com/go-redis/redis/v8"
 	"google.golang.org/grpc"
 )
 
-func InitServer(db *storage.Storage) *grpc.Server {
-	accountService := NewAccountService(db)
+func InitServer(db *storage.Storage, redis *redis.Client) *grpc.Server {
+	accountService := NewAccountService(db, redis)
 	budgetService := NewBudgetService(db)
 	categoryService := NewCategoryService(db)
 	goalService := NewGoalService(db)

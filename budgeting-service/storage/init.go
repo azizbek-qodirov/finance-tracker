@@ -7,6 +7,7 @@ import (
 	"budget-service/config"
 	"budget-service/storage/managers"
 
+	"github.com/go-redis/redis/v8"
 	_ "github.com/lib/pq"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -27,7 +28,7 @@ type Storage struct {
 	TransactionS TransactionI
 }
 
-func NewDatabaseStorage(config config.Config) (*Storage, error) {
+func NewDatabaseStorage(config config.Config) (*Storage, *redis.Client, error) {
 	// #################     MONGODB CONNECTION     ###################### //
 	clientOptions := options.Client().ApplyURI(config.MONGO_URI).SetAuth(options.Credential{
 		Username: "root",
@@ -35,16 +36,23 @@ func NewDatabaseStorage(config config.Config) (*Storage, error) {
 	})
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if err = client.Ping(context.TODO(), nil); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	fmt.Println("Successfully connected to the database mongodb!!!")
 
+	// #################     REDIS CONNECTION     ###################### //
+	rclient := redis.NewClient(&redis.Options{
+		Addr: cfg.REDIS_HOST + ":" + cfg.REDIS_PORT, // "localhost:6379"
+		DB:   0,
+	})
+	fmt.Println("Successfully connected to the database redis!!!")
+
 	return &Storage{
 		MongoClient: client,
-	}, nil
+	}, rclient, nil
 }
 
 func (s *Storage) Account() AccountI {

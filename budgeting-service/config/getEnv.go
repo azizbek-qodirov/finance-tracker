@@ -22,6 +22,8 @@ type Config struct {
 	MONGO_BUDGETS_COLLECTION_NAME      string
 
 	KAFKA_BROKER string
+	REDIS_HOST   string
+	REDIS_PORT   string
 }
 
 func Load() Config {
@@ -44,6 +46,9 @@ func Load() Config {
 	config.MONGO_BUDGETS_COLLECTION_NAME = cast.ToString(coalesce("MONGO_BUDGETS_COLLECTION_NAME", "budgets"))
 
 	config.KAFKA_BROKER = cast.ToString(coalesce("KAFKA_BROKER", "localhost:9092"))
+
+	config.REDIS_HOST = cast.ToString(coalesce("REDIS_HOST", "redis"))
+	config.REDIS_PORT = cast.ToString(coalesce("REDIS_PORT", "6379"))
 
 	return config
 }
