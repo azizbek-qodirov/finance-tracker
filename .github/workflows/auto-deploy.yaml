@@ -66,4 +66,4 @@ jobs:
             sudo docker compose down
             log_error "---------------- API GATEWAY STOPPED ----------------"
             sudo docker compose up --build -d
-            log_success "---------------- API GATEWAY STARTED ----------------" 
+            log_success "---------------- API GATEWAY STARTED ----------------"  
